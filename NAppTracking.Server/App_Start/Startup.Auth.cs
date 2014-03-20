@@ -32,7 +32,7 @@ namespace NAppTracking.Server
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication();
+            app.UseGoogleAuthentication();
         }
     }
 }

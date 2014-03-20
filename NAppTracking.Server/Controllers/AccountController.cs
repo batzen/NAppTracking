@@ -12,11 +12,13 @@ using NAppTracking.Server.Models;
 
 namespace NAppTracking.Server.Controllers
 {
+    using NAppTracking.Server.Entities;
+
     [Authorize]
     public class AccountController : Controller
     {
         public AccountController()
-            : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
+            : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EntitiesContext())))
         {
         }
 
