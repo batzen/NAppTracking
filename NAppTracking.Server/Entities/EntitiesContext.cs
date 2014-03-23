@@ -1,6 +1,8 @@
 ﻿namespace NAppTracking.Server.Entities
 {
     using System.Data.Entity;
+    using System.Security.Principal;
+    using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
 
     public class EntitiesContext : IdentityDbContext<ApplicationUser>

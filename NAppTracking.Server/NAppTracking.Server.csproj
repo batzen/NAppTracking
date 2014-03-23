@@ -188,10 +188,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApplicationsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Entities\ExceptionReport.cs" />
+    <Compile Include="Extensions\PrincipalExtensions.cs" />
+    <Compile Include="Extensions\SecurityExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -272,7 +275,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

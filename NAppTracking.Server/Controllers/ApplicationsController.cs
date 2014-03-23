@@ -1,26 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using NAppTracking.Server.Models;
-
-namespace NAppTracking.Server.Controllers
+﻿namespace NAppTracking.Server.Controllers
 {
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Net;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+    using System.Web.Routing;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using NAppTracking.Server.Entities;
 
+    [Authorize]
     public class ApplicationsController : Controller
     {
-        private EntitiesContext db = new EntitiesContext();
+        public ApplicationsController()
+            : this(new EntitiesContext()) 
+        {
+        }
+
+        public ApplicationsController(EntitiesContext db)
+        {
+            this.Db = db;
+            this.UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+        }
+
+        public EntitiesContext Db { get; private set; }
+
+        public UserManager<ApplicationUser> UserManager { get; private set; }
 
         // GET: /Applications/
         public async Task<ActionResult> Index()
         {
-            return View(await db.TrackingApplications.ToListAsync());
+            return View(await this.Db.TrackingApplications.ToListAsync());
         }
 
         // GET: /Applications/Details/5
@@ -30,11 +41,18 @@ namespace NAppTracking.Server.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TrackingApplication trackingapplication = await db.TrackingApplications.FindAsync(id);
+
+            var trackingapplication = await this.Db.TrackingApplications.FindAsync(id);
             if (trackingapplication == null)
             {
                 return HttpNotFound();
             }
+
+            if (!trackingapplication.IsOwner(this.User))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+
             return View(trackingapplication);
         }
 
@@ -53,9 +71,10 @@ namespace NAppTracking.Server.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.TrackingApplications.Add(trackingapplication);
-                trackingapplication.ApiKey = Guid.NewGuid().ToString().ToLowerInvariant();
-                await db.SaveChangesAsync();
+                var currentUser = await this.UserManager.FindByIdAsync(User.Identity.GetUserId());
+                trackingapplication.Owners.Add(currentUser);
+                this.Db.TrackingApplications.Add(trackingapplication);
+                await this.Db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -69,11 +88,18 @@ namespace NAppTracking.Server.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TrackingApplication trackingapplication = await db.TrackingApplications.FindAsync(id);
+
+            var trackingapplication = await this.Db.TrackingApplications.FindAsync(id);
             if (trackingapplication == null)
             {
                 return HttpNotFound();
             }
+
+            if (!trackingapplication.IsOwner(this.User))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+
             return View(trackingapplication);
         }
 
@@ -84,12 +110,18 @@ namespace NAppTracking.Server.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include="Key,Name,Description")] TrackingApplication trackingapplication)
         {
+            if (!trackingapplication.IsOwner(this.User))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+
             if (ModelState.IsValid)
             {
-                db.Entry(trackingapplication).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                this.Db.Entry(trackingapplication).State = EntityState.Modified;
+                await this.Db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+
             return View(trackingapplication);
         }
 
@@ -100,11 +132,18 @@ namespace NAppTracking.Server.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TrackingApplication trackingapplication = await db.TrackingApplications.FindAsync(id);
+
+            var trackingapplication = await this.Db.TrackingApplications.FindAsync(id);
             if (trackingapplication == null)
             {
                 return HttpNotFound();
             }
+
+            if (!trackingapplication.IsOwner(this.User))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+
             return View(trackingapplication);
         }
 
@@ -113,18 +152,82 @@ namespace NAppTracking.Server.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            TrackingApplication trackingapplication = await db.TrackingApplications.FindAsync(id);
-            db.TrackingApplications.Remove(trackingapplication);
-            await db.SaveChangesAsync();
+            var trackingapplication = await this.Db.TrackingApplications.FindAsync(id);
+            if (trackingapplication == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (!trackingapplication.IsOwner(this.User))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+
+            this.Db.TrackingApplications.Remove(trackingapplication);
+            await this.Db.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+
+        public async Task<ActionResult> ManageOwners(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var trackingapplication = await this.Db.TrackingApplications.FindAsync(id);
+            if (trackingapplication == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (!trackingapplication.IsOwner(this.User))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+
+            return this.View(trackingapplication);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddOwnerConfirmed(int id, string username)
+        {
+            var trackingapplication = await this.Db.TrackingApplications.FindAsync(id);
+            if (trackingapplication == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (!trackingapplication.IsOwner(this.User))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+
+            var owner = await this.UserManager.FindByNameAsync(username);
+            if (owner == null)
+            {
+                // todo: implement proper user notification for error
+                return this.HttpNotFound();
+            }
+
+            // Prevent duplicate owner addition
+            if (trackingapplication.Owners.All(x => x.Id != owner.Id))
+            {
+                trackingapplication.Owners.Add(owner);
+                await this.Db.SaveChangesAsync();
+            }
+
+            return this.RedirectToAction("ManageOwners", new {id = id});
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                this.Db.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

@@ -1,13 +1,19 @@
 ﻿namespace NAppTracking.Server.Entities
 {
+    using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
 
     public class TrackingApplication
     {
+        public TrackingApplication()
+        {
+            this.ApiKey = Guid.NewGuid().ToString().ToLowerInvariant();
+            this.Owners = new HashSet<ApplicationUser>();
+            this.ExceptionReports = new HashSet<ExceptionReport>();
+        }
+
         public int Key { get; set; }
 
-        [Required]
         public string Name { get; set; }
 
         public string Description { get; set; }
