@@ -1,7 +1,4 @@
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(NAppTracking.Server.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(NAppTracking.Server.App_Start.NinjectWebCommon), "Stop")]
-
-namespace NAppTracking.Server.App_Start
+namespace NAppTracking.Server
 {
     using System;
     using System.Web;

@@ -1,7 +1,6 @@
 ﻿namespace NAppTracking.Server
 {
     using System.Web.Mvc;
-    using NAppTracking.Server.Filters;
 
     public class FilterConfig
     {

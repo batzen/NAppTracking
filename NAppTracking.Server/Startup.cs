@@ -1,9 +1,7 @@
-﻿using Microsoft.Owin;
-using Owin;
-
-[assembly: OwinStartupAttribute(typeof(NAppTracking.Server.Startup))]
-namespace NAppTracking.Server
+﻿namespace NAppTracking.Server
 {
+    using Owin;
+
     public partial class Startup
     {
         public void Configuration(IAppBuilder app)
