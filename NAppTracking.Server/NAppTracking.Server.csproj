@@ -204,7 +204,6 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ExceptionReportApiController.cs" />
-    <Compile Include="Controllers\__ApiController.cs" />
     <Compile Include="Controllers\ApplicationsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Entities\ExceptionReport.cs" />
