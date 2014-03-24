@@ -1,8 +1,8 @@
-﻿using System.Web;
-using System.Web.Mvc;
-
-namespace NAppTracking.Server
+﻿namespace NAppTracking.Server
 {
+    using System.Web.Mvc;
+    using NAppTracking.Server.Filters;
+
     public class FilterConfig
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)

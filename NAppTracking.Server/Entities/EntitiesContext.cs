@@ -1,8 +1,6 @@
 ﻿namespace NAppTracking.Server.Entities
 {
     using System.Data.Entity;
-    using System.Security.Principal;
-    using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
 
     public class EntitiesContext : IdentityDbContext<ApplicationUser>
@@ -28,23 +26,25 @@
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(x => x.Applications);
+
             modelBuilder.Entity<TrackingApplication>()
-                .HasKey(x => x.Key);
+                .HasKey(x => x.Id);
 
             modelBuilder.Entity<TrackingApplication>()
                 .HasMany<ExceptionReport>(x => x.ExceptionReports)
-                .WithRequired(x => x.Application)
-                .HasForeignKey(x => x.ApplicationKey);
+                .WithRequired(x => x.Application);
 
             modelBuilder.Entity<TrackingApplication>()
                 .HasMany<ApplicationUser>(x => x.Owners)
-                .WithMany()
+                .WithMany(x => x.Applications)
                 .Map(c => c.ToTable("TrackingApplicationOwners")
-                    .MapLeftKey("ApplicationKey")
-                    .MapRightKey("UserKey"));
+                    .MapLeftKey("ApplicationId")
+                    .MapRightKey("UserId"));
 
             modelBuilder.Entity<ExceptionReport>()
-                .HasKey(x => x.Key);
+                .HasKey(x => x.Id);
         }
 
         #endregion

@@ -1,12 +1,13 @@
 ﻿namespace NAppTracking.Server.Entities
 {
-    public class ExceptionReport
+    using System.ComponentModel.DataAnnotations;
+
+    public class ExceptionReport : IEntity
     {
-        public int Key { get; set; }
+        [Key]
+        public int Id { get; set; }
 
-        public TrackingApplication Application { get; set; }
-
-        public int ApplicationKey { get; set; }
+        public virtual TrackingApplication Application { get; set; }
 
         public string ExceptionType { get; set; }
 

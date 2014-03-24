@@ -67,7 +67,7 @@
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="Key,Name,Description")] TrackingApplication trackingapplication)
+        public async Task<ActionResult> Create([Bind(Include="Id,Name,Description")] TrackingApplication trackingapplication)
         {
             if (ModelState.IsValid)
             {
@@ -108,7 +108,7 @@
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include="Key,Name,Description")] TrackingApplication trackingapplication)
+        public async Task<ActionResult> Edit([Bind(Include="Id,Name,Description")] TrackingApplication trackingapplication)
         {
             if (!trackingapplication.IsOwner(this.User))
             {
