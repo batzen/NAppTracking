@@ -1,5 +1,6 @@
 ﻿namespace NAppTracking.Server
 {
+    using System;
     using Microsoft.AspNet.Identity;
     using Microsoft.Owin;
     using Microsoft.Owin.Security.Cookies;
@@ -24,7 +25,10 @@
                         {
                             ctx.Response.Redirect(ctx.RedirectUri);
                         }
-                    }
+                    },
+                    ////OnValidateIdentity = ApplicationCookieIdentityValidator.OnValidateIdentity(
+                    ////                        validateInterval: TimeSpan.FromMinutes(0),
+                    ////                        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
             });
             // Use a cookie to temporarily store information about a user logging in with a third party login provider
