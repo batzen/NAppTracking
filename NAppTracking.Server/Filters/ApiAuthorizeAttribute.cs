@@ -1,12 +1,13 @@
 ﻿namespace NAppTracking.Server.Filters
 {
-    using System.Collections.Generic;
+    using System;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Web.Http.Controllers;
     using System.Web.Mvc;
     using NAppTracking.Server.Entities;
+    using NAppTracking.Server.Helpers;
     using AuthorizeAttribute = System.Web.Http.AuthorizeAttribute;
 
     public sealed class ApiAuthorizeAttribute : AuthorizeAttribute
@@ -15,21 +16,15 @@
 
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
-            IEnumerable<string> values;
-            if (actionContext.Request.Headers.TryGetValues(Constants.ApiKeyHeaderName, out values))
+            var apiKey = ApiKeyHelper.GetApiKey(actionContext.Request);;
+
+            var db = DependencyResolver.Current.GetService<EntitiesContext>();
+
+            var trackingApplication = db.TrackingApplications.FirstOrDefault(x => x.ApiKey == apiKey);
+
+            if (trackingApplication != null)
             {
-                var apiKey = values.FirstOrDefault();
-                if (!string.IsNullOrEmpty(apiKey))
-                {
-                    var db = DependencyResolver.Current.GetService<EntitiesContext>();
-
-                    var trackingApplication = db.TrackingApplications.FirstOrDefault(x => x.ApiKey.ToString().ToLower() == apiKey.ToLower());
-
-                    if (trackingApplication != null)
-                    {
-                        return true;
-                    }
-                }
+                return true;
             }
 
             return false;

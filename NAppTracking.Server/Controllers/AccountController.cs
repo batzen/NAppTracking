@@ -12,8 +12,8 @@
     [Authorize]
     public class AccountController : Controller
     {
-        public AccountController()
-            : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EntitiesContext())))
+        public AccountController(EntitiesContext db)
+            : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db)))
         {
         }
 

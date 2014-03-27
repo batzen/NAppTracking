@@ -1,16 +1,24 @@
 namespace NAppTracking.Server
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Web;
-
+    using System.Web.Http;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-    using NAppTracking.Server.Entities;
     using Ninject;
+    using Ninject.Modules;
     using Ninject.Web.Common;
+    using Ninject.Web.WebApi;
 
     public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
+
+        public static IKernel Kernel 
+        {
+            get { return bootstrapper.Kernel; }
+        }
 
         /// <summary>
         /// Starts the application
@@ -20,6 +28,8 @@ namespace NAppTracking.Server
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
             bootstrapper.Initialize(CreateKernel);
+
+            GlobalConfiguration.Configuration.DependencyResolver = new NinjectDependencyResolver(bootstrapper.Kernel);
         }
         
         /// <summary>
@@ -36,13 +46,12 @@ namespace NAppTracking.Server
         /// <returns>The created kernel.</returns>
         private static IKernel CreateKernel()
         {
-            var kernel = new StandardKernel();
+            var kernel = new StandardKernel(GetModules().ToArray());
             try
             {
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
-                RegisterServices(kernel);
                 return kernel;
             }
             catch
@@ -52,15 +61,9 @@ namespace NAppTracking.Server
             }
         }
 
-        /// <summary>
-        /// Load your modules or register your services here!
-        /// </summary>
-        /// <param name="kernel">The kernel.</param>
-        private static void RegisterServices(IKernel kernel)
+        private static IEnumerable<INinjectModule> GetModules()
         {
-            kernel.Bind<EntitiesContext>()
-                .To<EntitiesContext>()
-                .InRequestScope();
-        }        
+            yield return new AppModule();
+        }   
     }
 }

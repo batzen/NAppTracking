@@ -2,27 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
 
     public class TrackingApplication : IEntity
     {
-        public TrackingApplication()
-        {
-            this.ApiKey = Guid.NewGuid();
-            this.Owners = new HashSet<ApplicationUser>();
-            this.ExceptionReports = new HashSet<ExceptionReport>();
-        }
+        public virtual int Id { get; set; }
 
-        [Key]
-        public int Id { get; set; }
+        public virtual string Name { get; set; }
 
-        [Required]
-        public string Name { get; set; }
+        public virtual string Description { get; set; }
 
-        public string Description { get; set; }
-
-        [Required]
-        public Guid ApiKey { get; set; }
+        public virtual Guid ApiKey { get; set; }
 
         public virtual ICollection<ApplicationUser> Owners { get; set; }
 
