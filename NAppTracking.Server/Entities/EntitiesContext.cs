@@ -11,7 +11,7 @@
     public class EntitiesContext : IdentityDbContext<ApplicationUser>
     {
         public EntitiesContext()
-            : base("DefaultConnection")
+            : base("DefaultConnection", false)
         {
         }
 

@@ -152,22 +152,6 @@
             return exceptionReportFile;
         }
 
-        ////protected internal virtual void ReadPackageFromRequest()
-        ////{
-        ////    Stream stream;
-        ////    if (Request.Files.Count > 0)
-        ////    {
-        ////        // If we're using the newer API, the package stream is sent as a file.
-        ////        stream = Request.Files[0].InputStream;
-        ////    }
-        ////    else
-        ////    {
-        ////        stream = Request.InputStream;
-        ////    }
-
-        ////    return new Nupkg(stream, leaveOpen: false);
-        ////}
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
