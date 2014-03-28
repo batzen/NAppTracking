@@ -157,3 +157,4 @@ $RECYCLE.BIN/
 /packages
 *.mdf
 *.ldf
+/NAppTracking.Server/App_Data/Files
