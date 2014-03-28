@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B654F4
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAppTracking.Client", "NAppTracking.Client\NAppTracking.Client.csproj", "{BBEE2F9B-21EE-4F62-99DF-3D9D6B3DD47C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAppTracking.Client.Demo", "NAppTracking.Client.Demo\NAppTracking.Client.Demo.csproj", "{F29373F4-AFCD-417A-8754-C83ED1D246D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +32,14 @@ Global
 		{C3E08766-4487-4025-96E9-E76940E70347}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3E08766-4487-4025-96E9-E76940E70347}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3E08766-4487-4025-96E9-E76940E70347}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBEE2F9B-21EE-4F62-99DF-3D9D6B3DD47C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBEE2F9B-21EE-4F62-99DF-3D9D6B3DD47C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBEE2F9B-21EE-4F62-99DF-3D9D6B3DD47C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBEE2F9B-21EE-4F62-99DF-3D9D6B3DD47C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F29373F4-AFCD-417A-8754-C83ED1D246D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F29373F4-AFCD-417A-8754-C83ED1D246D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F29373F4-AFCD-417A-8754-C83ED1D246D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F29373F4-AFCD-417A-8754-C83ED1D246D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
