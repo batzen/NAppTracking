@@ -9,5 +9,8 @@
         /// </summary>
         [DefaultValue("~/App_Data/Files")]
         public string FileStorageDirectory { get; set; }
+
+        [DefaultValue(true)]
+        public bool IsDemoEnabled { get; set; }
     }
 }

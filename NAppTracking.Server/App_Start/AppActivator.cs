@@ -1,11 +1,12 @@
 ﻿namespace NAppTracking.Server
 {
     using System;
+    using System.Linq;
     using System.Security.Claims;
     using System.Web.Helpers;
-    using Microsoft.Ajax.Utilities;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
+    using NAppTracking.Server.Configuration;
     using NAppTracking.Server.Entities;
     using Ninject;
 
@@ -38,7 +39,10 @@
                 db.Database.Delete();
             }
 
-            if (db.Database.CreateIfNotExists())
+            var haveToCreateDemoDatabaseEntries = NinjectWebCommon.Kernel.Get<IAppConfiguration>().IsDemoEnabled
+                                                  && (db.Database.CreateIfNotExists() || db.Users.Any() == false);
+
+            if (haveToCreateDemoDatabaseEntries)
             {
                 CreateDemoDatabaseEntries(db);
             }

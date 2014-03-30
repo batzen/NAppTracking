@@ -6,5 +6,7 @@
         /// Gets the local directory in which to store files.
         /// </summary>
         string FileStorageDirectory { get; set; }
+
+        bool IsDemoEnabled { get; set; }
     }
 }

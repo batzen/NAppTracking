@@ -4,6 +4,6 @@
     {
         internal const string ApiKeyHeaderName = "X-NAppTracking-ApiKey";
 
-        internal const string ExceptionReportApiPath = "/api/ExceptionReport";
+        internal const string ExceptionReportApiPath = "api/ExceptionReport";
     }
 }
