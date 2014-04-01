@@ -1,0 +1,50 @@
+﻿@model IEnumerable<NAppTracking.Server.Entities.ExceptionReport>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedUtc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExceptionType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExceptionMessage)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StackTrace)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedUtc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExceptionType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExceptionMessage)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StackTrace)
+        </td>
+        <td>
+            @Html.ActionLink("Details", "Details", new { exceptionReportId = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { exceptionReportId = item.Id })
+        </td>
+    </tr>
+}
+
+</table>

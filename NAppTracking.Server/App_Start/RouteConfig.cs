@@ -9,6 +9,14 @@
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            routes.MapMvcAttributeRoutes();
+
+            //routes.MapRoute(
+            //    name: "ExceptionReport",
+            //    url: "Application/{applicationId}/ExceptionReport/{action}/{exceptionReportId}",
+            //    defaults: new { controller = "ExceptionReport", action = "Index", exceptionReportId = UrlParameter.Optional }
+            //);
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

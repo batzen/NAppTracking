@@ -10,30 +10,25 @@
     using NAppTracking.Server.Entities;
 
     [Authorize]
-    public class ApplicationsController : Controller
+    public class ApplicationController : Controller
     {
-        public ApplicationsController()
-            : this(new EntitiesContext()) 
-        {
-        }
+        private readonly EntitiesContext db;
 
-        public ApplicationsController(EntitiesContext db)
+        public ApplicationController(EntitiesContext db)
         {
-            this.Db = db;
+            this.db = db;
             this.UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
         }
 
-        public EntitiesContext Db { get; private set; }
-
         public UserManager<ApplicationUser> UserManager { get; private set; }
 
-        // GET: /Applications/
+        // GET: /Application/
         public async Task<ActionResult> Index()
         {
-            return View(await this.Db.TrackingApplications.ToListAsync());
+            return View(await this.db.TrackingApplications.ToListAsync());
         }
 
-        // GET: /Applications/Details/5
+        // GET: /Application/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -41,7 +36,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var trackingapplication = await this.Db.TrackingApplications.FindAsync(id);
+            var trackingapplication = await this.db.TrackingApplications.FindAsync(id);
             if (trackingapplication == null)
             {
                 return HttpNotFound();
@@ -55,13 +50,13 @@
             return View(trackingapplication);
         }
 
-        // GET: /Applications/Create
+        // GET: /Application/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: /Applications/Create
+        // POST: /Application/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -72,15 +67,15 @@
             {
                 var currentUser = await this.UserManager.FindByIdAsync(User.Identity.GetUserId());
                 trackingapplication.Owners.Add(currentUser);
-                this.Db.TrackingApplications.Add(trackingapplication);
-                await this.Db.SaveChangesAsync();
+                this.db.TrackingApplications.Add(trackingapplication);
+                await this.db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
             return View(trackingapplication);
         }
 
-        // GET: /Applications/Edit/5
+        // GET: /Application/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -88,7 +83,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var trackingapplication = await this.Db.TrackingApplications.FindAsync(id);
+            var trackingapplication = await this.db.TrackingApplications.FindAsync(id);
             if (trackingapplication == null)
             {
                 return HttpNotFound();
@@ -102,7 +97,7 @@
             return View(trackingapplication);
         }
 
-        // POST: /Applications/Edit/5
+        // POST: /Application/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -116,15 +111,15 @@
 
             if (ModelState.IsValid)
             {
-                this.Db.Entry(trackingapplication).State = EntityState.Modified;
-                await this.Db.SaveChangesAsync();
+                this.db.Entry(trackingapplication).State = EntityState.Modified;
+                await this.db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
             return View(trackingapplication);
         }
 
-        // GET: /Applications/Delete/5
+        // GET: /Application/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -132,7 +127,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var trackingapplication = await this.Db.TrackingApplications.FindAsync(id);
+            var trackingapplication = await this.db.TrackingApplications.FindAsync(id);
             if (trackingapplication == null)
             {
                 return HttpNotFound();
@@ -146,12 +141,12 @@
             return View(trackingapplication);
         }
 
-        // POST: /Applications/Delete/5
+        // POST: /Application/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var trackingapplication = await this.Db.TrackingApplications.FindAsync(id);
+            var trackingapplication = await this.db.TrackingApplications.FindAsync(id);
             if (trackingapplication == null)
             {
                 return HttpNotFound();
@@ -162,8 +157,8 @@
                 return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
 
-            this.Db.TrackingApplications.Remove(trackingapplication);
-            await this.Db.SaveChangesAsync();
+            this.db.TrackingApplications.Remove(trackingapplication);
+            await this.db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
@@ -174,7 +169,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var trackingapplication = await this.Db.TrackingApplications.FindAsync(id);
+            var trackingapplication = await this.db.TrackingApplications.FindAsync(id);
             if (trackingapplication == null)
             {
                 return HttpNotFound();
@@ -192,7 +187,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddOwnerConfirmed(int id, string username)
         {
-            var trackingapplication = await this.Db.TrackingApplications.FindAsync(id);
+            var trackingapplication = await this.db.TrackingApplications.FindAsync(id);
             if (trackingapplication == null)
             {
                 return HttpNotFound();
@@ -214,7 +209,7 @@
             if (trackingapplication.Owners.All(x => x.Id != owner.Id))
             {
                 trackingapplication.Owners.Add(owner);
-                await this.Db.SaveChangesAsync();
+                await this.db.SaveChangesAsync();
             }
 
             return this.RedirectToAction("ManageOwners", new {id = id});
@@ -224,7 +219,7 @@
         {
             if (disposing)
             {
-                this.Db.Dispose();
+                this.db.Dispose();
             }
 
             base.Dispose(disposing);

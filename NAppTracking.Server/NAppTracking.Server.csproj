@@ -220,7 +220,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\ExceptionReportController.cs" />
-    <Compile Include="Controllers\ApplicationsController.cs" />
+    <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\ExceptionReportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Entities\ExceptionReport.cs" />
     <Compile Include="Entities\ExceptionReportFile.cs" />
@@ -305,14 +306,17 @@
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Applications\Create.cshtml" />
-    <Content Include="Views\Applications\Delete.cshtml" />
-    <Content Include="Views\Applications\Details.cshtml" />
-    <Content Include="Views\Applications\Edit.cshtml" />
-    <Content Include="Views\Applications\Index.cshtml" />
+    <Content Include="Views\Application\Create.cshtml" />
+    <Content Include="Views\Application\Delete.cshtml" />
+    <Content Include="Views\Application\Details.cshtml" />
+    <Content Include="Views\Application\Edit.cshtml" />
+    <Content Include="Views\Application\Index.cshtml" />
     <Content Include="Views\Shared\_ApplicationsPartial.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Views\ExceptionReport\Delete.cshtml" />
+    <Content Include="Views\ExceptionReport\Details.cshtml" />
+    <Content Include="Views\ExceptionReport\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
