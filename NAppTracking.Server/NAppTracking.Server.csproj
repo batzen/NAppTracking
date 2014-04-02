@@ -311,9 +311,6 @@
     <Content Include="Views\Application\Details.cshtml" />
     <Content Include="Views\Application\Edit.cshtml" />
     <Content Include="Views\Application\Index.cshtml" />
-    <Content Include="Views\Shared\_ApplicationsPartial.cshtml">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="Views\ExceptionReport\Delete.cshtml" />
     <Content Include="Views\ExceptionReport\Details.cshtml" />
     <Content Include="Views\ExceptionReport\Index.cshtml" />

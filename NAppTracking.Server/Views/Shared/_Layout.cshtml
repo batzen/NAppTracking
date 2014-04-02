@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using NAppTracking.Server.Configuration
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,7 +7,6 @@
     <title>@ViewBag.Title - NAppServices</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -22,7 +22,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    @Html.Partial("_ApplicationsPartial")
+                    <li>@Html.ActionLink("Applications", "Index", "Application")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
@@ -33,8 +33,12 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - NAppServices</p>
+        <footer style="text-align:center">
+            <p>&copy; @DateTime.Now.Year - Bastian Schmidt</p>
+            @if (DependencyResolver.Current.GetService<IAppConfiguration>().IsDemoEnabled)
+            {
+                <p><strong>Demo mode is enabled.</strong></p>
+            }
         </footer>
     </div>
 

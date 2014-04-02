@@ -11,7 +11,7 @@
 
     public class ConfigurationService
     {
-        private const string SettingPrefix = "Gallery.";
+        private const string SettingPrefix = "NAppTracking.";
 
         private IAppConfiguration current;
 
