@@ -6,18 +6,23 @@
 
     public class ExceptionReport : IEntity, ICreatedUtc
     {
-        public virtual int Id { get; set; }
+        public ExceptionReport()
+        {
+            if (this.ExceptionReportFiles == null) this.ExceptionReportFiles = new HashSet<ExceptionReportFile>();
+        }
 
-        public virtual DateTime? CreatedUtc { get; set; }
+        public int Id { get; set; }
+
+        public DateTime? CreatedUtc { get; set; }
 
         [IgnoreDataMember]
         public virtual TrackingApplication Application { get; set; }
 
-        public virtual string ExceptionType { get; set; }
+        public string ExceptionType { get; set; }
 
-        public virtual string ExceptionMessage { get; set; }
+        public string ExceptionMessage { get; set; }
 
-        public virtual string StackTrace { get; set; }
+        public string StackTrace { get; set; }
 
         [IgnoreDataMember]
         public virtual ICollection<ExceptionReportFile> ExceptionReportFiles { get; set; }

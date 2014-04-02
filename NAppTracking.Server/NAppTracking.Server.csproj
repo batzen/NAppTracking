@@ -223,6 +223,7 @@
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\ExceptionReportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Entities\EntityModelBinder.cs" />
     <Compile Include="Entities\ExceptionReport.cs" />
     <Compile Include="Entities\ExceptionReportFile.cs" />
     <Compile Include="Entities\IModifiedUtc.cs" />

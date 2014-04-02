@@ -8,7 +8,7 @@
     {
         public ApplicationUser()
         {
-            this.Applications = new HashSet<TrackingApplication>();
+            if (this.Applications == null) this.Applications = new HashSet<TrackingApplication>();
         }
 
         public virtual ICollection<TrackingApplication> Applications { get; set; }

@@ -16,6 +16,8 @@
         {
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
+            System.Web.Mvc.ModelBinders.Binders.DefaultBinder = new EntityModelBinder();
+
             NinjectWebCommon.Start();
         }
 

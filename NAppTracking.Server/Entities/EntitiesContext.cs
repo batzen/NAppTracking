@@ -13,6 +13,8 @@
         public EntitiesContext()
             : base("DefaultConnection", false)
         {
+            this.Configuration.LazyLoadingEnabled = true;
+            this.Configuration.ProxyCreationEnabled = true;
         }
 
         public DbSet<TrackingApplication> TrackingApplications { get; set; }

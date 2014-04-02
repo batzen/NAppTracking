@@ -5,13 +5,22 @@
 
     public class TrackingApplication : IEntity
     {
-        public virtual int Id { get; set; }
+        public TrackingApplication()
+        {
+            this.ApiKey = Guid.NewGuid();
 
-        public virtual string Name { get; set; }
+            if (this.Owners == null) this.Owners = new HashSet<ApplicationUser>();
 
-        public virtual string Description { get; set; }
+            if (this.ExceptionReports == null) this.ExceptionReports = new HashSet<ExceptionReport>();
+        }
 
-        public virtual Guid ApiKey { get; set; }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public Guid ApiKey { get; set; }
 
         public virtual ICollection<ApplicationUser> Owners { get; set; }
 

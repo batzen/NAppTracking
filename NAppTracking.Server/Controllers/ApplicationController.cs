@@ -57,17 +57,15 @@
         }
 
         // POST: /Application/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include="Name,Description")] TrackingApplication trackingapplication)
         {
             if (ModelState.IsValid)
-            {
+            {                
+                this.db.TrackingApplications.Add(trackingapplication);
                 var currentUser = await this.UserManager.FindByIdAsync(User.Identity.GetUserId());
                 trackingapplication.Owners.Add(currentUser);
-                this.db.TrackingApplications.Add(trackingapplication);
                 await this.db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -98,8 +96,6 @@
         }
 
         // POST: /Application/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include="Name,Description")] TrackingApplication trackingapplication)
@@ -120,14 +116,14 @@
         }
 
         // GET: /Application/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<ActionResult> Delete(int? applicationId)
         {
-            if (id == null)
+            if (applicationId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var trackingapplication = await this.db.TrackingApplications.FindAsync(id);
+            var trackingapplication = await this.db.TrackingApplications.FindAsync(applicationId);
             if (trackingapplication == null)
             {
                 return HttpNotFound();
@@ -212,7 +208,7 @@
                 await this.db.SaveChangesAsync();
             }
 
-            return this.RedirectToAction("ManageOwners", new {id = id});
+            return this.RedirectToAction("ManageOwners", new { id = id });
         }
 
         protected override void Dispose(bool disposing)
