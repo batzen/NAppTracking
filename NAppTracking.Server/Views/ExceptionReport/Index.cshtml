@@ -6,9 +6,6 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
@@ -41,8 +38,8 @@
             @Html.DisplayFor(modelItem => item.StackTrace)
         </td>
         <td>
-            @Html.ActionLink("Details", "Details", new { exceptionReportId = item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { exceptionReportId = item.Id })
+            @Html.ActionLink("Details", "Details", new { exceptionReportId = item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
+            @Html.ActionLink("Delete", "Delete", new { exceptionReportId = item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
         </td>
     </tr>
 }
