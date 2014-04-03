@@ -15,14 +15,12 @@
                 <hr />
                 @Html.ValidationSummary(true)
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "username or email" })
                     @Html.ValidationMessageFor(m => m.UserName)
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">
-                        <i class="glyphicon glyphicon-lock"></i>
-                    </span>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "password" })
                     @Html.ValidationMessageFor(m => m.Password)
                 </div>
