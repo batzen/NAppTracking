@@ -5,16 +5,16 @@
 
     public interface IFileStorageService
     {
-        Task DeleteFileAsync(string folderName, string fileName);
+        Task DeleteFileAsync(string fileName);
 
-        Task<bool> FileExistsAsync(string folderName, string fileName);
+        Task<bool> FileExistsAsync(string fileName);
 
-        Task<Stream> GetFileAsync(string folderName, string fileName);
+        Task<Stream> GetFileAsync(string fileName);
 
-        Task SaveFileAsync(string folderName, string fileName, Stream filestream);
+        Task SaveFileAsync(string fileName, Stream filestream);
 
-        Task MoveFileAsync(string sourcePath, string destinationPath);
+        Task MoveFileAsync(string source, string destination);
 
-        Task CopyFileAsync(string sourcePath, string destinationPath);
+        Task CopyFileAsync(string source, string destination);
     }
 }

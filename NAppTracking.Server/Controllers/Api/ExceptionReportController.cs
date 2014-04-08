@@ -7,10 +7,8 @@
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Http;
     using System.Web.Http.Description;
-    using NAppTracking.Server.Configuration;
     using NAppTracking.Server.Entities;
     using NAppTracking.Server.Filters;
     using NAppTracking.Server.Helpers;
@@ -21,13 +19,11 @@
     {
         private readonly EntitiesContext db;
         private readonly IFileStorageService fileStorageService;
-        private readonly IAppConfiguration configuration;
         private readonly IFileSystemService fileSystemService;
 
-        public ExceptionReportController(EntitiesContext db, IAppConfiguration configuration, IFileSystemService fileSystemService, IFileStorageService fileStorageService)
+        public ExceptionReportController(EntitiesContext db, IFileSystemService fileSystemService, IFileStorageService fileStorageService)
         {
             this.db = db;
-            this.configuration = configuration;
             this.fileSystemService = fileSystemService;
             this.fileStorageService = fileStorageService;
         }
@@ -94,16 +90,14 @@
                 return this.NotFound();
             }
 
-            ////var root = HttpContext.Current.Server.MapPath(string.Format("~/App_Data/Application_{0}/Exception_{1}", application.Id, id));
-
-            var tempPath = HttpContext.Current.Server.MapPath(Path.Combine(this.configuration.FileStorageDirectory, "Temp"));
+            var tempPath = this.fileSystemService.BuildPath("Temp");
 
             if (!this.fileSystemService.DirectoryExists(tempPath))
             {
                 this.fileSystemService.CreateDirectory(tempPath);
             }
 
-            var exceptionReportPath = HttpContext.Current.Server.MapPath(Path.Combine(this.configuration.FileStorageDirectory, string.Format("Application_{0}/Exception_{1}", application.Id, id)));
+            var exceptionReportPath = this.fileSystemService.BuildPath(string.Format("Application_{0}/Exception_{1}", application.Id, id));
 
             if (!this.fileSystemService.DirectoryExists(exceptionReportPath))
             {

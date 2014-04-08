@@ -15,5 +15,9 @@
         Stream OpenRead(string path);
 
         Stream OpenWrite(string path);
+
+        string BuildPath(string folderOrFileName);
+
+        string ResolvePath(string path);
     }
 }

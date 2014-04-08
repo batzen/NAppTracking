@@ -1,5 +1,7 @@
 ﻿namespace NAppTracking.Client.Demo
 {
+    using System;
+
     public static class Program
     {
         public static void Main(string[] args)
@@ -13,7 +15,16 @@
 
             var client = new TrackingClient();
 
-            await client.SendAsync(exceptionReport);
+            try
+            {
+                await client.SendAsync(exceptionReport);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
+
+            Console.ReadLine();
         }
     }
 }

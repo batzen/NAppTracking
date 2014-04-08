@@ -3,7 +3,6 @@
     using System;
     using System.IO;
     using System.Threading.Tasks;
-    using System.Web.Hosting;
     using NAppTracking.Server.Configuration;
 
     public class FileSystemFileStorageService : IFileStorageService
@@ -17,18 +16,11 @@
             this.fileSystemService = fileSystemService;
         }
 
-        public Task DeleteFileAsync(string folderName, string fileName)
+        public Task DeleteFileAsync(string fileName)
         {
-            if (string.IsNullOrWhiteSpace(folderName))
-            {
-                throw new ArgumentNullException("folderName");
-            }
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                throw new ArgumentNullException("fileName");
-            }
+            EnsureFileName(fileName);
 
-            var path = BuildPath(this.configuration.FileStorageDirectory, folderName, fileName);
+            var path = this.fileSystemService.BuildPath(fileName);
             if (this.fileSystemService.FileExists(path))
             {
                 this.fileSystemService.DeleteFile(path);
@@ -37,112 +29,83 @@
             return Task.FromResult(0);
         }
 
-        public Task<bool> FileExistsAsync(string folderName, string fileName)
+        public Task<bool> FileExistsAsync(string fileName)
         {
-            if (string.IsNullOrWhiteSpace(folderName))
-            {
-                throw new ArgumentNullException("folderName");
-            }
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                throw new ArgumentNullException("fileName");
-            }
+            EnsureFileName(fileName);
 
-            var path = BuildPath(this.configuration.FileStorageDirectory, folderName, fileName);
+            var path = this.fileSystemService.BuildPath(fileName);
             var fileExists = this.fileSystemService.FileExists(path);
 
             return Task.FromResult(fileExists);
         }
 
-        public Task<Stream> GetFileAsync(string folderName, string fileName)
+        public Task<Stream> GetFileAsync(string fileName)
         {
-            if (string.IsNullOrWhiteSpace(folderName))
-            {
-                throw new ArgumentNullException("folderName");
-            }
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                throw new ArgumentNullException("fileName");
-            }
+            EnsureFileName(fileName);
 
-            var path = BuildPath(this.configuration.FileStorageDirectory, folderName, fileName);
+            var path = this.fileSystemService.BuildPath(fileName);
 
             var fileStream = this.fileSystemService.FileExists(path) ? this.fileSystemService.OpenRead(path) : null;
             return Task.FromResult(fileStream);
         }
 
-        public Task SaveFileAsync(string folderName, string fileName, Stream filestream)
+        public Task SaveFileAsync(string fileName, Stream filestream)
         {
-            if (string.IsNullOrWhiteSpace(folderName))
-            {
-                throw new ArgumentNullException("folderName");
-            }
-
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                throw new ArgumentNullException("fileName");
-            }
+            EnsureFileName(fileName);
 
             if (filestream == null)
             {
                 throw new ArgumentNullException("filestream");
             }
 
-            var storageDirectory = ResolvePath(this.configuration.FileStorageDirectory);
+            var storageDirectory = this.fileSystemService.ResolvePath(this.configuration.FileStorageDirectory);
 
             if (!this.fileSystemService.DirectoryExists(storageDirectory))
             {
-                this.fileSystemService.CreateDirectory(storageDirectory);
+                this.fileSystemService.CreateDirectory(this.configuration.FileStorageDirectory);
             }
 
-            var folderPath = Path.Combine(storageDirectory, folderName);
-            if (!this.fileSystemService.DirectoryExists(folderPath))
+            var directoryName = Path.GetDirectoryName(fileName);
+
+            if (string.IsNullOrEmpty(directoryName) == false)
             {
-                this.fileSystemService.CreateDirectory(folderPath);
+                var folderPath = Path.Combine(storageDirectory, directoryName);
+                if (!this.fileSystemService.DirectoryExists(folderPath))
+                {
+                    this.fileSystemService.CreateDirectory(folderPath);
+                }
             }
 
-            var filePath = BuildPath(this.configuration.FileStorageDirectory, folderName, fileName);
-            using (var file = this.fileSystemService.OpenWrite(filePath))
+            using (var file = this.fileSystemService.OpenWrite(fileName))
             {
                 return filestream.CopyToAsync(file);
             }
         }
 
-        public async Task MoveFileAsync(string sourcePath, string destinationPath)
+        public async Task MoveFileAsync(string source, string destination)
         {
-            await this.CopyFileAsync(sourcePath, destinationPath);
+            await this.CopyFileAsync(source, destination);
 
-            File.Delete(sourcePath);
+            await this.DeleteFileAsync(source);
         }
 
-        public async Task CopyFileAsync(string sourcePath, string destinationPath)
+        public async Task CopyFileAsync(string source, string destination)
         {
-            using (Stream source = File.Open(sourcePath, FileMode.Open))
+            using (Stream sourceStream = File.Open(source, FileMode.Open))
             {
-                using (Stream destination = File.Create(destinationPath))
+                using (Stream destinationStream = File.Create(destination))
                 {
-                    await source.CopyToAsync(destination);
+                    await sourceStream.CopyToAsync(destinationStream);
                 }
             }
         }
 
-        private static string BuildPath(string fileStorageDirectory, string folderName, string fileName)
+        private static void EnsureFileName(string fileName)
         {
-            // Resolve the file storage directory
-            fileStorageDirectory = ResolvePath(fileStorageDirectory);
-
-            return Path.Combine(fileStorageDirectory, folderName, fileName);
-        }
-
-        private static string ResolvePath(string fileStorageDirectory)
-        {
-            if (fileStorageDirectory.StartsWith("~/", StringComparison.OrdinalIgnoreCase) 
-                && HostingEnvironment.IsHosted)
+            if (string.IsNullOrWhiteSpace(fileName))
             {
-                fileStorageDirectory = HostingEnvironment.MapPath(fileStorageDirectory);
+                throw new ArgumentNullException("fileName");
             }
-
-            return fileStorageDirectory;
         }
     }
 }

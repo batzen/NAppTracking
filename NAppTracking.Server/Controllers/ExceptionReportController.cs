@@ -6,16 +6,19 @@
     using System.Net;
     using System.Web.Mvc;
     using NAppTracking.Server.Entities;
+    using NAppTracking.Server.Services;
 
     [Authorize]
     [Route("Application/{applicationId}/ExceptionReport/{action=Index}/{exceptionReportId?}")]  
     public class ExceptionReportController : Controller
     {
         private readonly EntitiesContext db;
+        private readonly IFileStorageService fileStorageService;
 
-        public ExceptionReportController(EntitiesContext db)
+        public ExceptionReportController(EntitiesContext db, IFileStorageService fileStorageService)
         {
             this.db = db;
+            this.fileStorageService = fileStorageService;
         }
 
         // GET: /ExceptionReport/
@@ -36,11 +39,14 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             ExceptionReport exceptionreport = await db.ExceptionReports.FindAsync(exceptionReportId);
+
             if (exceptionreport == null)
             {
                 return HttpNotFound();
             }
+
             return View(exceptionreport);
         }
 
@@ -51,11 +57,14 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             ExceptionReport exceptionreport = await db.ExceptionReports.FindAsync(exceptionReportId);
+
             if (exceptionreport == null)
             {
                 return HttpNotFound();
             }
+
             return View(exceptionreport);
         }
 
@@ -66,6 +75,12 @@
         {
             ExceptionReport exceptionreport = await db.ExceptionReports.FindAsync(exceptionReportId);
             db.ExceptionReports.Remove(exceptionreport);
+
+            foreach (var file in exceptionreport.ExceptionReportFiles)
+            {
+                await this.fileStorageService.DeleteFileAsync(file.FileName);
+            }
+
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

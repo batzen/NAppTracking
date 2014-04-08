@@ -1,6 +1,7 @@
 ﻿namespace NAppTracking.Client
 {
     using System;
+    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Threading.Tasks;
@@ -25,21 +26,27 @@
 
             var handler = new HttpClientHandler();
             var httpClient = new HttpClient(handler);
+            
             var request = new HttpRequestMessage(HttpMethod.Post, exceptionReportAddress);
 
             request.Headers.Add(Constants.ApiKeyHeaderName, this.ApiKey.ToString());
 
-            if (handler.SupportsTransferEncodingChunked())
-            {
-                request.Headers.TransferEncodingChunked = true;
-            }
+            ////request.Headers.TransferEncodingChunked = true;
 
             request.Content = new StringContent(JsonConvert.SerializeObject(report));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            var response = await httpClient.SendAsync(request);
+            try
+            {
+                var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead);
 
-            return response.IsSuccessStatusCode;
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
         }
     }
 }
