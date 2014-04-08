@@ -17,7 +17,9 @@
 
             try
             {
-                await client.SendAsync(exceptionReport);
+                var t = client.SendAsync(exceptionReport);
+
+                t.Wait();
             }
             catch (Exception exception)
             {

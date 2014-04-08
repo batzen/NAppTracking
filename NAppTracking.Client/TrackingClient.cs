@@ -26,7 +26,7 @@
 
             var handler = new HttpClientHandler();
             var httpClient = new HttpClient(handler);
-            
+
             var request = new HttpRequestMessage(HttpMethod.Post, exceptionReportAddress);
 
             request.Headers.Add(Constants.ApiKeyHeaderName, this.ApiKey.ToString());
@@ -38,9 +38,9 @@
 
             try
             {
-                var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+                await httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead);
 
-                return response.IsSuccessStatusCode;
+                return true;
             }
             catch (Exception e)
             {
