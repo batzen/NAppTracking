@@ -73,7 +73,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int exceptionReportId)
         {
-            ExceptionReport exceptionreport = await db.ExceptionReports.FindAsync(exceptionReportId);
+            var exceptionreport = await db.ExceptionReports.FindAsync(exceptionReportId);
             db.ExceptionReports.Remove(exceptionreport);
 
             foreach (var file in exceptionreport.ExceptionReportFiles)

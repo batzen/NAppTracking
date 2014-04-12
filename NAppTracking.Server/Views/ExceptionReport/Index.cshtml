@@ -1,4 +1,5 @@
-﻿@model IEnumerable<NAppTracking.Server.Entities.ExceptionReport>
+﻿@using NAppTracking.Server.Extensions
+@model IEnumerable<NAppTracking.Server.Entities.ExceptionReport>
 
 @{
     ViewBag.Title = "Index";
@@ -18,7 +19,7 @@
             @Html.DisplayNameFor(model => model.ExceptionMessage)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.StackTrace)
+            @Html.DisplayNameFor(model => model.MachineName)
         </th>
         <th></th>
     </tr>
@@ -26,20 +27,19 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.CreatedUtc)
+            <span title="@(string.Format("{0:u}", item.CreatedUtc))">@item.CreatedUtc.ToRelativeTime()</span>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.ExceptionType)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ExceptionMessage)
+        <td style="width: 100%">
+            @Html.ActionLink(item.ExceptionMessage, "Details", new { exceptionReportId = item.Id })
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.StackTrace)
+            @Html.DisplayFor(modelItem => item.MachineName)
         </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new { exceptionReportId = item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
-            @Html.ActionLink("Delete", "Delete", new { exceptionReportId = item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
+        <td>            
+            @Html.ActionLink("Delete", "Delete", new { exceptionReportId = item.Id }, new { @class = "btn btn-default btn-xs", role = "button" })
         </td>
     </tr>
 }
