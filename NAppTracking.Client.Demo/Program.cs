@@ -4,29 +4,31 @@
 
     public static class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            SendReport();
-        }
-
-        private static async void SendReport()
-        {
-            var exceptionReport = new ExceptionReport();
-
             var client = new TrackingClient();
 
             try
             {
-                var t = client.SendAsync(exceptionReport);
+                try
+                {
+                    throw new Exception("Just a try/catch test");
+                }
+                catch (Exception ex)
+                {
+                    var t = client.SendAsync(ex);
 
-                t.Wait();
+                    t.Wait();
+                }
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception.Message);
+                Console.ReadLine();
+                return 1;
             }
 
-            Console.ReadLine();
+            return 0;
         }
     }
 }

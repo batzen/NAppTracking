@@ -116,14 +116,14 @@
         }
 
         // GET: /Application/Delete/5
-        public async Task<ActionResult> Delete(int? applicationId)
+        public async Task<ActionResult> Delete(int? id)
         {
-            if (applicationId == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var trackingapplication = await this.db.TrackingApplications.FindAsync(applicationId);
+            var trackingapplication = await this.db.TrackingApplications.FindAsync(id);
             if (trackingapplication == null)
             {
                 return HttpNotFound();

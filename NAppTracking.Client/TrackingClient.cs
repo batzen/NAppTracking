@@ -1,7 +1,6 @@
 ﻿namespace NAppTracking.Client
 {
     using System;
-    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Threading.Tasks;
@@ -19,6 +18,11 @@
         public Uri BaseAddress { get; set; }
 
         public Guid ApiKey { get; set; }
+
+        public async Task<bool> SendAsync(Exception ex)
+        {
+            return await this.SendAsync(new ExceptionReport(ex));
+        }
 
         public async Task<bool> SendAsync(ExceptionReport report)
         {
@@ -38,9 +42,9 @@
 
             try
             {
-                await httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+                var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead);
 
-                return true;
+                return response.IsSuccessStatusCode;
             }
             catch (Exception e)
             {

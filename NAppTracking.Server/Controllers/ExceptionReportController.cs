@@ -29,7 +29,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            return View(await db.ExceptionReports.Where(x => x.Application.Id == applicationId).ToListAsync());
+            return View(await db.ExceptionReports.Where(x => x.Application.Id == applicationId).OrderByDescending(x => x.CreatedUtc).ToListAsync());
         }
 
         // GET: /ExceptionReport/Details/5
