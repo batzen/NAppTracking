@@ -1,5 +1,7 @@
 ﻿@using NAppTracking.Server.Extensions
-@model IEnumerable<NAppTracking.Server.Entities.ExceptionReport>
+@using PagedList
+@using PagedList.Mvc
+@model IPagedList<NAppTracking.Server.Entities.ExceptionReport>
 
 @{
     ViewBag.Title = "Index";
@@ -7,41 +9,45 @@
 
 <h2>Index</h2>
 
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.CreatedUtc)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().CreatedUtc)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ExceptionType)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().ExceptionType)
+        </th>
+        <th style="width: 65%">
+            @Html.DisplayNameFor(model => model.FirstOrDefault().ExceptionMessage)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ExceptionMessage)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MachineName)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().MachineName)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            <span title="@(string.Format("{0:u}", item.CreatedUtc))">@item.CreatedUtc.ToRelativeTime()</span>
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ExceptionType)
-        </td>
-        <td style="width: 100%">
-            @Html.ActionLink(item.ExceptionMessage, "Details", new { exceptionReportId = item.Id })
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MachineName)
-        </td>
-        <td>            
-            @Html.ActionLink("Delete", "Delete", new { exceptionReportId = item.Id }, new { @class = "btn btn-default btn-xs", role = "button" })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                <span title="@(string.Format("{0:u}", item.CreatedUtc))">@item.CreatedUtc.ToRelativeTime()</span>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExceptionType)
+            </td>
+            <td>
+                @Html.ActionLink(item.ExceptionMessage, "Details", new { exceptionReportId = item.Id })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MachineName)
+            </td>
+            <td>            
+                @Html.ActionLink("Delete", "Delete", new { exceptionReportId = item.Id }, new { @class = "btn btn-default btn-xs", role = "button" })
+            </td>
+        </tr>
+    }
 
 </table>
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))

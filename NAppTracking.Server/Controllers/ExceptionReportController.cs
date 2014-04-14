@@ -1,5 +1,6 @@
 ﻿namespace NAppTracking.Server.Controllers
 {
+    using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -7,9 +8,9 @@
     using System.Web.Mvc;
     using NAppTracking.Server.Entities;
     using NAppTracking.Server.Services;
+    using PagedList;
 
     [Authorize]
-    [Route("Application/{applicationId}/ExceptionReport/{action=Index}/{exceptionReportId?}")]  
     public class ExceptionReportController : Controller
     {
         private readonly EntitiesContext db;
@@ -22,14 +23,25 @@
         }
 
         // GET: /ExceptionReport/
-        public async Task<ActionResult> Index(int? applicationId)
+        public ActionResult Index(int? applicationId, int? page)
         {
             if (applicationId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            return View(await db.ExceptionReports.Where(x => x.Application.Id == applicationId).OrderByDescending(x => x.CreatedUtc).ToListAsync());
+            var currentPageIndex = page.HasValue
+                ? page.Value
+                : 1;
+
+            var pageSize = 25;
+
+            var reports = db.ExceptionReports
+                .Where(x => x.Application.Id == applicationId)
+                .OrderByDescending(x => x.CreatedUtc)
+                .ToPagedList(currentPageIndex, pageSize);
+
+            return View(reports);
         }
 
         // GET: /ExceptionReport/Details/5
