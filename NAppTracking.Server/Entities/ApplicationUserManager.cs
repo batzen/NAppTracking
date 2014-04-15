@@ -14,7 +14,8 @@
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext owinContext)
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(new EntitiesContext()));
+            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(owinContext.Get<EntitiesContext>()));
+
             // Configure the application user manager
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
