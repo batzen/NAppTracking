@@ -1,6 +1,7 @@
 ﻿namespace NAppTracking.Server
 {
     using System;
+    using System.Data.Entity;
     using System.Linq;
     using System.Security.Claims;
     using System.Web.Helpers;
@@ -33,7 +34,7 @@
 
         private static void CreateDatabase()
         {
-            var db = NinjectWebCommon.Kernel.Get<EntitiesContext>();
+            var db = NinjectWebCommon.Kernel.Get<IEntitiesContext>();
             
             if (db.Database.Exists()
                 && db.Database.CompatibleWithModel(false) == false)
@@ -50,12 +51,12 @@
             }
         }
 
-        private static async void CreateDemoDatabaseEntries(EntitiesContext db)
+        private static async void CreateDemoDatabaseEntries(IEntitiesContext db)
         {
             var demoUser = db.Users.Create();
             demoUser.UserName = "demo";
 
-            using (var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db)))
+            using (var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>((DbContext)db)))
             {
                 var result = await userManager.CreateAsync(demoUser, "demodemo");
                 if (!result.Succeeded)

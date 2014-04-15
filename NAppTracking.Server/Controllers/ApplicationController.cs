@@ -4,23 +4,41 @@
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
     using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.EntityFramework;
+    using Microsoft.AspNet.Identity.Owin;
     using NAppTracking.Server.Entities;
 
     [Authorize]
     public class ApplicationController : Controller
     {
-        private readonly EntitiesContext db;
+        private readonly IEntitiesContext db;
+        private ApplicationUserManager userManager;
 
-        public ApplicationController(EntitiesContext db)
+        public ApplicationController(IEntitiesContext db)
         {
             this.db = db;
-            this.UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
         }
 
-        public UserManager<ApplicationUser> UserManager { get; private set; }
+        public ApplicationController(IEntitiesContext db, ApplicationUserManager userManager)
+        {
+            this.db = db;
+            this.UserManager = userManager;
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return this.userManager ?? this.HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+
+            private set
+            {
+                this.userManager = value;
+            }
+        }
 
         // GET: /Application/
         public async Task<ActionResult> Index()

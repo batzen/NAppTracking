@@ -19,7 +19,7 @@
             Bind<IAppConfiguration>()
                 .ToMethod(context => configuration.Current);
 
-            this.Bind<EntitiesContext>()
+            this.Bind<IEntitiesContext>()
                 .To<EntitiesContext>()
                 .InRequestScope();
 

@@ -4,6 +4,10 @@
 
     public class AppConfiguration : IAppConfiguration
     {
+        public AppConfiguration()
+        {
+        }
+
         /// <summary>
         /// Gets the local directory in which to store files.
         /// </summary>
@@ -11,5 +15,8 @@
         public string FileStorageDirectory { get; set; }
 
         public bool IsDemoEnabled { get; set; }
+
+        [DefaultValue(25)]
+        public int DefaultPageSize { get; set; }
     }
 }

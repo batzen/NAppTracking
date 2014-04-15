@@ -8,7 +8,7 @@
         protected override object CreateModel(ControllerContext controllerContext, ModelBindingContext bindingContext, Type modelType)
         {
             // Get the EF context using an IoC container
-            var modelContext = DependencyResolver.Current.GetService<EntitiesContext>();
+            var modelContext = DependencyResolver.Current.GetService<IEntitiesContext>();
 
             var set = modelContext.Set(modelType);
 

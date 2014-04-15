@@ -1,11 +1,10 @@
 ﻿namespace NAppTracking.Server.Controllers
 {
-    using System;
-    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Net;
     using System.Web.Mvc;
+    using NAppTracking.Server.Configuration;
     using NAppTracking.Server.Entities;
     using NAppTracking.Server.Services;
     using PagedList;
@@ -13,12 +12,14 @@
     [Authorize]
     public class ExceptionReportController : Controller
     {
-        private readonly EntitiesContext db;
+        private readonly IEntitiesContext db;
+        private readonly IAppConfiguration configuration;
         private readonly IFileStorageService fileStorageService;
 
-        public ExceptionReportController(EntitiesContext db, IFileStorageService fileStorageService)
+        public ExceptionReportController(IEntitiesContext db, IAppConfiguration configuration, IFileStorageService fileStorageService)
         {
             this.db = db;
+            this.configuration = configuration;
             this.fileStorageService = fileStorageService;
         }
 
@@ -34,7 +35,7 @@
                 ? page.Value
                 : 1;
 
-            var pageSize = 25;
+            var pageSize = configuration.DefaultPageSize;
 
             var reports = db.ExceptionReports
                 .Where(x => x.Application.Id == applicationId)

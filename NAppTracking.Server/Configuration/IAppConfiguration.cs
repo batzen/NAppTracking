@@ -8,5 +8,7 @@
         string FileStorageDirectory { get; set; }
 
         bool IsDemoEnabled { get; set; }
+
+        int DefaultPageSize { get; set; }
     }
 }

@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
     using Microsoft.AspNet.Identity.EntityFramework;
 
-    public class EntitiesContext : IdentityDbContext<ApplicationUser>
+    public class EntitiesContext : IdentityDbContext<ApplicationUser>, IEntitiesContext
     {
         public EntitiesContext()
             : base("DefaultConnection", false)
@@ -115,6 +115,11 @@
                     modifiedUtc.ModifiedUtc = currentUtcTime;
                 }
             }
+        }
+
+        public static EntitiesContext Create()
+        {
+            return new EntitiesContext();
         }
     }
 }

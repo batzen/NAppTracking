@@ -4,7 +4,7 @@
     using System.Web;
     using System.Web.Mvc;
     using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.EntityFramework;
+    using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
     using NAppTracking.Server.Entities;
     using NAppTracking.Server.Models;
@@ -12,17 +12,29 @@
     [Authorize]
     public class AccountController : Controller
     {
-        public AccountController(EntitiesContext db)
-            : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db)))
+        private ApplicationUserManager userManager;
+
+        public AccountController()
         {
         }
 
-        public AccountController(UserManager<ApplicationUser> userManager)
+        public AccountController(ApplicationUserManager userManager)
         {
-            UserManager = userManager;
+            this.UserManager = userManager;
         }
 
-        public UserManager<ApplicationUser> UserManager { get; private set; }
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return this.userManager ?? this.HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+
+            private set
+            {
+                this.userManager = value;
+            }
+        }
 
         //
         // GET: /Account/Login

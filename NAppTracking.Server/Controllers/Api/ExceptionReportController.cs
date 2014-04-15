@@ -17,11 +17,11 @@
     [ApiAuthorize]
     public class ExceptionReportController : ApiController
     {
-        private readonly EntitiesContext db;
+        private readonly IEntitiesContext db;
         private readonly IFileStorageService fileStorageService;
         private readonly IFileSystemService fileSystemService;
 
-        public ExceptionReportController(EntitiesContext db, IFileSystemService fileSystemService, IFileStorageService fileStorageService)
+        public ExceptionReportController(IEntitiesContext db, IFileSystemService fileSystemService, IFileStorageService fileStorageService)
         {
             this.db = db;
             this.fileSystemService = fileSystemService;
