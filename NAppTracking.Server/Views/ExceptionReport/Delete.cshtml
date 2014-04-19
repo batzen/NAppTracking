@@ -34,22 +34,13 @@
         <dd>
             @Html.DisplayFor(model => model.Message)
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.StackTrace)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.StackTrace)
-        </dd>
-
     </dl>
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-primary btn-sm" /> |
+            <input type="submit" value="Delete" class="btn btn-primary btn-sm" />
             @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default btn-sm", role = "button" })
         </div>
     }
