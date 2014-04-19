@@ -30,7 +30,6 @@
                 RequireDigit = false,
                 RequireLowercase = false,
                 RequireUppercase = false,
-
             };
 
             return manager;

@@ -4,10 +4,6 @@
 
     public static class DateTimeExtensions
     {
-        /// <summary>
-        /// Returns a humanized string indicating how long ago something happened, eg "3 days ago".
-        /// For future dates, returns when this DateTime will occur from DateTime.UtcNow.
-        /// </summary>
         public static string ToRelativeTime(this DateTime? dt)
         {
             return dt.HasValue 
@@ -15,10 +11,6 @@
                 : "Unkown";
         }
 
-        /// <summary>
-        /// Returns a humanized string indicating how long ago something happened, eg "3 days ago".
-        /// For future dates, returns when this DateTime will occur from DateTime.UtcNow.
-        /// </summary>
         public static string ToRelativeTime(this DateTime dt)
         {
             var utcNow = DateTime.UtcNow;

@@ -4,6 +4,6 @@
 
     public interface ICreatedUtc
     {
-        DateTime? CreatedUtc { get; set; }
+        DateTime CreatedUtc { get; set; }
     }
 }

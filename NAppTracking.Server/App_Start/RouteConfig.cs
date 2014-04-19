@@ -16,6 +16,12 @@
             );
 
             routes.MapRoute(
+                name: "ExceptionReportFile",
+                url: "Application/{applicationId}/ExceptionReport/File/{storageId}",
+                defaults: new { controller = "ExceptionReport", action = "File" }
+            );
+
+            routes.MapRoute(
                 name: "ExceptionReport",
                 url: "Application/{applicationId}/ExceptionReport/{action}/{exceptionReportId}",
                 defaults: new { controller = "ExceptionReport", action = "Index", exceptionReportId = UrlParameter.Optional }

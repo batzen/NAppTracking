@@ -21,6 +21,8 @@
 
         public DbSet<ExceptionReport> ExceptionReports { get; set; }
 
+        public DbSet<ExceptionReportCustomData> ExceptionReportCustomData { get; set; }
+
         public DbSet<ExceptionReportFile> ExceptionReportFiles { get; set; }
 
         #region Overrides of DbContext
@@ -51,9 +53,28 @@
             modelBuilder.Entity<ExceptionReport>()
                 .Property(x => x.CreatedUtc)
                 .IsRequired();
+
+            modelBuilder.Entity<ExceptionReport>()
+                .HasMany(x => x.CustomDataSets)
+                .WithRequired(x => x.ExceptionReport);
             modelBuilder.Entity<ExceptionReport>()
                 .HasMany(x => x.ExceptionReportFiles)
                 .WithRequired(x => x.ExceptionReport);
+
+            modelBuilder.Entity<ExceptionReportCustomDataSet>()
+                .HasKey(x => x.Id);
+            modelBuilder.Entity<ExceptionReportCustomDataSet>()
+                .Property(x => x.Name)
+                .IsRequired();
+            modelBuilder.Entity<ExceptionReportCustomDataSet>()
+                .HasMany(x => x.CustomData)
+                .WithRequired(x => x.DataSet);
+
+            modelBuilder.Entity<ExceptionReportCustomData>()
+                .HasKey(x => x.Id);
+            modelBuilder.Entity<ExceptionReportCustomData>()
+                .Property(x => x.Key)
+                .IsRequired();
 
             modelBuilder.Entity<ExceptionReportFile>()
                 .HasKey(x => x.Id);

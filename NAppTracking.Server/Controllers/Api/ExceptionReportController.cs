@@ -9,6 +9,8 @@
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Web.Http.Description;
+    using AutoMapper;
+    using NAppTracking.Client;
     using NAppTracking.Server.Entities;
     using NAppTracking.Server.Filters;
     using NAppTracking.Server.Helpers;
@@ -31,23 +33,19 @@
         // POST api/ExceptionReport
         [HttpPost]
         [ResponseType(typeof(ExceptionReport))]
-        public async Task<IHttpActionResult> PostExceptionReport(ExceptionReport exceptionreport)
+        public async Task<IHttpActionResult> PostExceptionReport(ExceptionReportDto exceptionreportDto)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.BadRequest(this.ModelState);
             }
 
-            if (exceptionreport == null)
+            if (exceptionreportDto == null)
             {
                 return this.BadRequest("No data specified for exception report.");
             }
-
-            if (exceptionreport.Id != 0)
-            {
-                return this.BadRequest("Specifying an Id is not allowed.");
-            }
-
+           
+            var exceptionreport = Mapper.Map<ExceptionReportDto, ExceptionReport>(exceptionreportDto);
             var apiKey = ApiKeyHelper.GetApiKey(this.Request);
 
             var application = this.db.TrackingApplications.FirstOrDefault(x => x.ApiKey == apiKey);
@@ -58,6 +56,7 @@
             }
             
             exceptionreport.Application = application;
+
             this.db.ExceptionReports.Add(exceptionreport);
             await this.db.SaveChangesAsync();
 
@@ -118,11 +117,11 @@
                     Trace.WriteLine(file.Headers.ContentDisposition.Name);
                     Trace.WriteLine("Server file path: " + file.LocalFileName);
 
-                    var exceptionReportFile = this.CreateExceptionReportFile(file);
+                    var exceptionReportFile = this.CreateExceptionReportFile(exceptionReport, file);
 
                     await this.fileStorageService.MoveFileAsync(file.LocalFileName, Path.Combine(exceptionReportPath, exceptionReportFile.StorageId.ToString()));
 
-                    exceptionReport.ExceptionReportFiles.Add(exceptionReportFile);
+                    this.db.ExceptionReportFiles.Add(exceptionReportFile);
                 }
 
                 await this.db.SaveChangesAsync();
@@ -135,9 +134,10 @@
             }
         }
 
-        private ExceptionReportFile CreateExceptionReportFile(MultipartFileData file)
+        private ExceptionReportFile CreateExceptionReportFile(ExceptionReport exceptionReport, MultipartFileData file)
         {
             var exceptionReportFile = this.db.ExceptionReportFiles.Create();
+            exceptionReportFile.ExceptionReport = exceptionReport;
             exceptionReportFile.StorageId = Guid.NewGuid();
             exceptionReportFile.FileName = file.Headers.ContentDisposition.FileName;
             exceptionReportFile.DisplayName = file.Headers.ContentDisposition.Name;

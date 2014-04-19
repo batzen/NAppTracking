@@ -4,14 +4,16 @@
 @model IPagedList<NAppTracking.Server.Entities.ExceptionReport>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Exceptionreports";
+
+    var paging = Html.PagedListPager(Model, page => Url.Action("Index", new {page}), PagedListHelper.DefaultOptions);
 }
 
-<h2>Index</h2>
+<h2>Exceptionreports</h2>
 
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+@paging
 
-<table class="table">
+<table class="table table-hover table-striped table-condensed">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.FirstOrDefault().CreatedUtc)
@@ -28,7 +30,8 @@
         <th></th>
     </tr>
 
-    @foreach (var item in Model) {
+    @foreach (var item in Model)
+    {
         <tr>
             <td>
                 <span title="@(string.Format("{0:u}", item.CreatedUtc))">@item.CreatedUtc.ToRelativeTime()</span>
@@ -42,7 +45,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.MachineName)
             </td>
-            <td>            
+            <td>
                 @Html.ActionLink("Delete", "Delete", new { exceptionReportId = item.Id }, new { @class = "btn btn-default btn-xs", role = "button" })
             </td>
         </tr>
@@ -50,4 +53,4 @@
 
 </table>
 
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+@paging

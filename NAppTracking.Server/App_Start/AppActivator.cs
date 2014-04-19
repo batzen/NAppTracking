@@ -5,8 +5,10 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Web.Helpers;
+    using AutoMapper;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
+    using NAppTracking.Client;
     using NAppTracking.Server.Configuration;
     using NAppTracking.Server.Entities;
     using Ninject;
@@ -20,6 +22,10 @@
             System.Web.Mvc.ModelBinders.Binders.DefaultBinder = new EntityModelBinder();
 
             NinjectWebCommon.Start();
+
+            Mapper.CreateMap<ExceptionReportDto, ExceptionReport>();
+            Mapper.CreateMap<ExceptionReportCustomDataSetDto, ExceptionReportCustomDataSet>();
+            Mapper.CreateMap<ExceptionReportCustomDataDto, ExceptionReportCustomData>();
         }
 
         public static void PostStart()
@@ -39,7 +45,11 @@
             if (db.Database.Exists()
                 && db.Database.CompatibleWithModel(false) == false)
             {
-                db.Database.Delete();
+                // Just drop all tables multiple times. This way we can delete all tables regardless of PKs and FKs.
+                for (var i = 0; i < 5; i++)
+                {
+                    db.Database.ExecuteSqlCommand("exec sp_MSforeachtable 'DROP TABLE ?'");   
+                }                
             }
 
             var haveToCreateDemoDatabaseEntries = NinjectWebCommon.Kernel.Get<IAppConfiguration>().IsDemoEnabled

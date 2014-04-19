@@ -40,3 +40,67 @@ input[type="checkbox"].input-validation-error {
 .validation-summary-valid {
     display: none;
 }
+
+.pagination {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.error-detail {
+    background-color: #ffffcc;
+    padding: 1em;
+    overflow: scroll;
+    font: consolas, monospace;
+}
+
+.custom-data .error-detail {
+    padding: 0.5em;
+    margin-top: 4px;
+}
+
+.error-time { 
+    font-size: 110%; 
+    color: #555; 
+}
+
+.side-scroll {
+    width: 100%;
+    overflow: auto;
+}
+
+.kv-title {
+    color: #224C00;
+    font-weight: bold;
+    font-size: 120%;
+    margin: 10px 0 5px 0;
+}
+
+    .kv-title.title-error {
+        color: maroon;
+    }
+
+.kv-table {
+    border-collapse: collapse;
+    border: 0;
+}
+
+    .kv-table td, .kv-table th {
+        padding: 0.4em;
+    }
+
+.kv-title .hidden {
+    display: none;
+}
+
+.kv-table td.key {
+    width: 200px;
+    font-size: 0.9em;
+}
+
+.kv-table td.value {
+    font-family: Consolas, Monaco, monospace;
+}
+
+.kv-table tr:nth-child(odd) {
+    background-color: #F2F2F2;
+}
