@@ -12,8 +12,6 @@
 
         public virtual ExceptionReport ExceptionReport { get; set; }
 
-        public string DisplayName { get; set; }
-
         public string FileName { get; set; }
 
         public string MIMEType { get; set; }        

@@ -36,6 +36,6 @@
 </div>
 <p>
     @Html.ActionLink("Exception reports", "Index", "ExceptionReport", new { applicationId = Model.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
+    @Html.ActionLink("Edit", "Edit", new { Model.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default btn-sm", role = "button" })
 </p>

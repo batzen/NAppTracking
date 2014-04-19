@@ -41,7 +41,7 @@
         private static void CreateDatabase()
         {
             var db = NinjectWebCommon.Kernel.Get<IEntitiesContext>();
-            
+
             if (db.Database.Exists()
                 && db.Database.CompatibleWithModel(false) == false)
             {

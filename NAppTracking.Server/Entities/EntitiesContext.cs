@@ -85,9 +85,6 @@
                 .Property(x => x.StorageId)
                 .IsRequired();
             modelBuilder.Entity<ExceptionReportFile>()
-                .Property(x => x.DisplayName)
-                .IsRequired();
-            modelBuilder.Entity<ExceptionReportFile>()
                 .Property(x => x.FileName)
                 .IsRequired();
         }

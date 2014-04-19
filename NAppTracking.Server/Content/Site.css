@@ -68,39 +68,31 @@ input[type="checkbox"].input-validation-error {
     overflow: auto;
 }
 
-.kv-title {
+.key-value-title {
     color: #224C00;
     font-weight: bold;
     font-size: 120%;
     margin: 10px 0 5px 0;
 }
 
-    .kv-title.title-error {
-        color: maroon;
-    }
-
-.kv-table {
+.key-value-table {
     border-collapse: collapse;
     border: 0;
 }
 
-    .kv-table td, .kv-table th {
-        padding: 0.4em;
-    }
-
-.kv-title .hidden {
-    display: none;
+.key-value-table td, .key-value-table th {
+    padding: 0.4em;
 }
 
-.kv-table td.key {
+.key-value-table td.key {
     width: 200px;
     font-size: 0.9em;
 }
 
-.kv-table td.value {
+.key-value-table td.value {
     font-family: Consolas, Monaco, monospace;
 }
 
-.kv-table tr:nth-child(odd) {
+.key-value-table tr:nth-child(odd) {
     background-color: #F2F2F2;
 }

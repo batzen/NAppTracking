@@ -1,4 +1,4 @@
-﻿@using NAppTracking.Server.Extensions
+﻿@using Humanizer
 @model NAppTracking.Server.Entities.ExceptionReport
 
 @{
@@ -9,22 +9,22 @@
 <div>
     <div class="page-header">
         <h1>
-            @Html.DisplayFor(model => model.ExceptionMessage)<br />
-            <small>@Html.DisplayFor(model => model.ExceptionType)</small>
+            @Html.DisplayFor(model => model.Message)<br />
+            <small>@Html.DisplayFor(model => model.Type)</small>
         </h1>
     </div>
     <pre class="error-detail">@Html.DisplayFor(model => model.Details)
     </pre>
-    <p class="error-time">occurred <b title="@exceptionReport.CreatedUtc.ToLongDateString() at @exceptionReport.CreatedUtc.ToLongTimeString()">@exceptionReport.CreatedUtc.ToRelativeTime()</b> on @exceptionReport.MachineName @Html.ActionLink("Delete", "Delete", new { exceptionReportId = exceptionReport.Id }, new { @class = "btn btn-default btn-xs", role = "button" })</p>
+    <p class="error-time">occurred <b title="@exceptionReport.CreatedUtc.ToLongDateString() at @exceptionReport.CreatedUtc.ToLongTimeString()">@exceptionReport.CreatedUtc.Humanize()</b> on @exceptionReport.Machine (Process: @exceptionReport.ProcessName) @Html.ActionLink("Delete", "Delete", new { exceptionReport.Id }, new { @class = "btn btn-default btn-xs", role = "button" })</p>
 
     <div class="row">
         <div class="col-md-6">
             @foreach (var exceptionReportCustomDataSet in exceptionReport.CustomDataSets)
             {
                 <div class="custom-data">
-                    <h3 class="kv-title">@exceptionReportCustomDataSet.Name</h3>
+                    <h3 class="key-value-title">@exceptionReportCustomDataSet.Name</h3>
                     <div class="side-scroll">
-                        <table class="kv-table">
+                        <table class="key-value-table">
                             @foreach (var customData in exceptionReportCustomDataSet.CustomData)
                             {
                                 <tr>
@@ -38,17 +38,17 @@
             }
         </div>
         <div class="col-md-6">
-            <h3 class="kv-title">Files</h3>
+            <h3 class="key-value-title">Files</h3>
             <ul class="media-list">         
                 @foreach (var exceptionReportFile in exceptionReport.ExceptionReportFiles)
                 {
                     <li class="media">
-                        <a class="pull-left" href="@Url.Action("File", "ExceptionReport", new { exceptionReportFile.StorageId })">
+                        <a class="pull-left" href="@Url.Action("File", "ExceptionReport", new { exceptionReportFile.Id })">
                             <span class="glyphicon glyphicon-download-alt"></span>
-                            @*<img class="media-object" src="..." alt="@exceptionReportFile.FileName">*@
+                            @*<img class="media-object" src="@Url.Action("File", new { exceptionReportFile.Id })" alt="@exceptionReportFile.FileName">*@
                         </a>
                         <div class="media-body">
-                            <h4 class="media-heading">@exceptionReportFile.DisplayName</h4>
+                            <h4 class="media-heading">@exceptionReportFile.FileName</h4>
                         </div>
                     </li>                
                 }
@@ -57,5 +57,5 @@
     </div>
 </div>
 <p>
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default btn-sm", role = "button" })
+    @Html.ActionLink("Back to List", "Index", new { applicationId = exceptionReport.Application.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
 </p>

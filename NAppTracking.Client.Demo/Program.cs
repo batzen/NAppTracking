@@ -36,7 +36,7 @@
                         },
                         new HashSet<ExceptionReportFileDto>
                         {
-                            new ExceptionReportFileDto("Demo", "Demo.jpg", "Demo.jpg")
+                            new ExceptionReportFileDto("Demo.jpg")
                         });
 
                     t.Wait();

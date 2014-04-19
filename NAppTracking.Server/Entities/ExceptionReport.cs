@@ -21,16 +21,15 @@
         [IgnoreDataMember]
         public virtual TrackingApplication Application { get; set; }
 
-        [Display(Name = "Type")]
-        public string ExceptionType { get; set; }
+        public string Type { get; set; }
 
-        [Display(Name = "Message")]
-        public string ExceptionMessage { get; set; }
+        public string Message { get; set; }
 
         public string Details { get; set; }
 
-        [Display(Name = "Machine")]
-        public string MachineName { get; set; }
+        public string ProcessName { get; set; }
+
+        public string Machine { get; set; }
 
         [IgnoreDataMember]
         public virtual ICollection<ExceptionReportFile> ExceptionReportFiles { get; set; }

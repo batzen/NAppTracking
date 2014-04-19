@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Security.Principal;
+    using Microsoft.AspNet.Identity;
     using NAppTracking.Server.Entities;
 
     public static class SecurityExtensions
@@ -19,7 +20,7 @@
                 return false;
             }
 
-            return user.IsAdministrator() || secureObject.Owners.Any(u => u.UserName == user.Identity.Name);
+            return user.IsAdministrator() || secureObject.Owners.Any(u => u.Id == user.Identity.GetUserId());
         }
 
         public static bool IsOwner(this TrackingApplication secureObject, ApplicationUser user)

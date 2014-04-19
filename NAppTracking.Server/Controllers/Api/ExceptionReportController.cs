@@ -7,6 +7,7 @@
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Http;
     using System.Web.Http.Description;
     using AutoMapper;
@@ -60,7 +61,7 @@
             this.db.ExceptionReports.Add(exceptionreport);
             await this.db.SaveChangesAsync();
 
-            return this.CreatedAtRoute("DefaultApi", new { id = exceptionreport.Id }, exceptionreport);
+            return this.CreatedAtRoute("DefaultApi", new { exceptionreport.Id }, exceptionreport);
         }
 
         // PUT api/ExceptionReport/5
@@ -113,13 +114,10 @@
                 // This illustrates how to get the file names.
                 foreach (var file in provider.FileData)
                 {
-                    Trace.WriteLine(file.Headers.ContentDisposition.FileName);
-                    Trace.WriteLine(file.Headers.ContentDisposition.Name);
-                    Trace.WriteLine("Server file path: " + file.LocalFileName);
-
                     var exceptionReportFile = this.CreateExceptionReportFile(exceptionReport, file);
-
-                    await this.fileStorageService.MoveFileAsync(file.LocalFileName, Path.Combine(exceptionReportPath, exceptionReportFile.StorageId.ToString()));
+                    
+                    var fileName = string.Format("{0}_{1}", exceptionReportFile.StorageId, exceptionReportFile.FileName);
+                    await this.fileStorageService.MoveFileAsync(file.LocalFileName, Path.Combine(exceptionReportPath, fileName));
 
                     this.db.ExceptionReportFiles.Add(exceptionReportFile);
                 }
@@ -140,9 +138,9 @@
             exceptionReportFile.ExceptionReport = exceptionReport;
             exceptionReportFile.StorageId = Guid.NewGuid();
             exceptionReportFile.FileName = file.Headers.ContentDisposition.FileName;
-            exceptionReportFile.DisplayName = file.Headers.ContentDisposition.Name;
-            exceptionReportFile.MIMEType = file.Headers.ContentDisposition.DispositionType;
+            exceptionReportFile.MIMEType = MimeMapping.GetMimeMapping(exceptionReportFile.FileName);
             exceptionReportFile.Size = new FileInfo(file.LocalFileName).Length;
+
             return exceptionReportFile;
         }
 

@@ -79,7 +79,7 @@
             
             foreach (var file in reportFiles)
             {
-                content.Add(new StreamContent(new FileStream(file.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read)), file.Name, file.FileName);   
+                content.Add(new StreamContent(new FileStream(file.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read)), Path.GetFileName(file.FullPath), Path.GetFileName(file.FullPath));   
             }            
 
             request.Content = content;

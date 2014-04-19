@@ -226,7 +226,7 @@
                 await this.db.SaveChangesAsync();
             }
 
-            return this.RedirectToAction("ManageOwners", new { id = id });
+            return this.RedirectToAction("ManageOwners", new { id });
         }
 
         protected override void Dispose(bool disposing)

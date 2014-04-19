@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Net;
+    using System.Web;
     using System.Web.Mvc;
     using NAppTracking.Server.Configuration;
     using NAppTracking.Server.Entities;
@@ -27,21 +28,17 @@
         }
 
         // GET: /ExceptionReport/
-        public ActionResult Index(int? applicationId, int? page)
+        // id is used as page and just called id here so we are able to use the default routing
+        public ActionResult Index(int? id, int? applicationId)
         {
-            if (applicationId == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            var currentPageIndex = page.HasValue
-                ? page.Value
+            var currentPageIndex = id.HasValue
+                ? id.Value
                 : 1;
 
             var pageSize = configuration.DefaultPageSize;
 
             var reports = db.ExceptionReports
-                .Where(x => x.Application.Id == applicationId)
+                .Where(x => (applicationId.HasValue == false || x.Application.Id == applicationId) && x.Application.Owners.Any(u => u.UserName == this.User.Identity.Name))
                 .OrderByDescending(x => x.CreatedUtc)
                 .ToPagedList(currentPageIndex, pageSize);
 
@@ -49,36 +46,46 @@
         }
 
         // GET: /ExceptionReport/Details/5
-        public async Task<ActionResult> Details(int? exceptionReportId)
+        public async Task<ActionResult> Details(int? id)
         {
-            if (exceptionReportId == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var exceptionreport = await db.ExceptionReports.FindAsync(exceptionReportId);
+            var exceptionreport = await db.ExceptionReports.FindAsync(id);
 
             if (exceptionreport == null)
             {
                 return HttpNotFound();
+            }
+
+            if (exceptionreport.Application.IsOwner(this.User) == false)
+            {
+                return new HttpUnauthorizedResult();
             }
 
             return View(exceptionreport);
         }
 
         // GET: /ExceptionReport/Delete/5
-        public async Task<ActionResult> Delete(int? exceptionReportId)
+        public async Task<ActionResult> Delete(int? id)
         {
-            if (exceptionReportId == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var exceptionreport = await db.ExceptionReports.FindAsync(exceptionReportId);
+            var exceptionreport = await db.ExceptionReports.FindAsync(id);
 
             if (exceptionreport == null)
             {
                 return HttpNotFound();
+            }
+
+            if (exceptionreport.Application.IsOwner(this.User) == false)
+            {
+                return new HttpUnauthorizedResult();
             }
 
             return View(exceptionreport);
@@ -87,9 +94,20 @@
         // POST: /ExceptionReport/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int exceptionReportId)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var exceptionreport = await db.ExceptionReports.FindAsync(exceptionReportId);
+            var exceptionreport = await db.ExceptionReports.FindAsync(id);
+
+            if (exceptionreport == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (exceptionreport.Application.IsOwner(this.User) == false)
+            {
+                return new HttpUnauthorizedResult();
+            }
+
             db.ExceptionReports.Remove(exceptionreport);
 
             foreach (var file in exceptionreport.ExceptionReportFiles)
@@ -101,21 +119,23 @@
             return RedirectToAction("Index");
         }
 
-        public ActionResult File(Guid storageId)
+        public ActionResult File(int id)
         {
-            var result = this.db.ExceptionReportFiles
-                .Where(x => x.StorageId == storageId)
-                .Select(x => new {ApplicationId = x.ExceptionReport.Application.Id, ExceptionId = x.ExceptionReport.Id, FileName = x.FileName})
-                .FirstOrDefault();
+            var exceptionReportFile = this.db.ExceptionReportFiles.FirstOrDefault(x => x.Id == id);
 
-            if (result == null)
+            if (exceptionReportFile == null)
             {
                 return this.HttpNotFound();
             }
 
-            var path = this.fileSystemService.BuildPath(string.Format("Application_{0}/Exception_{1}/{2}", result.ApplicationId, result.ExceptionId, storageId));
+            if (exceptionReportFile.ExceptionReport.Application.IsOwner(this.User) == false)
+            {
+                return new HttpUnauthorizedResult();
+            }
 
-            return this.File(path, "application/force-download", result.FileName);
+            var path = this.fileSystemService.BuildPath(string.Format("Application_{0}/Exception_{1}/{2}_{3}", exceptionReportFile.ExceptionReport.Application.Id, exceptionReportFile.ExceptionReport.Id, exceptionReportFile.StorageId, exceptionReportFile.FileName));
+
+            return this.File(path, exceptionReportFile.MIMEType, exceptionReportFile.FileName);
         }
 
         protected override void Dispose(bool disposing)

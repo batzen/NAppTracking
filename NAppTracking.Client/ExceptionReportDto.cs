@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Runtime.Serialization;
+    using System.Text;
 
     public class ExceptionReportDto
     {
@@ -18,28 +20,48 @@
             }
 
             this.Exception = exception;
-            this.ExceptionType = exception.GetType().ToString();
-            this.ExceptionMessage = exception.Message;
 
+            var causingException = GetCausingException(exception);
+
+            this.Type = causingException.GetType().ToString();
+            this.Message = causingException.Message;
+
+            // Use original exception for details because ToString of that exception contains the details (stacktrace etc.) in the correct order
             this.Details = exception.ToString();
 
-            this.MachineName = Environment.MachineName;
+            this.ProcessName = Process.GetCurrentProcess().ProcessName;
+
+            this.Machine = Environment.MachineName;
 
             this.CustomDataSets = customData ?? new HashSet<ExceptionReportCustomDataSetDto>();
 
             this.ExceptionReportFiles = exceptionReportFiles ?? new HashSet<ExceptionReportFileDto>();
         }
 
+        private Exception GetCausingException(Exception exception)
+        {
+            var causingException = exception;
+
+            while (causingException.InnerException != null)
+            {
+                causingException = causingException.InnerException;
+            }
+
+            return causingException;
+        }
+
         [IgnoreDataMember]
         public Exception Exception { get; protected set; }
 
-        public string ExceptionType { get; set; }
+        public string Type { get; set; }
 
-        public string ExceptionMessage { get; set; }
+        public string Message { get; set; }
 
         public string Details { get; set; }
 
-        public string MachineName { get; set; }
+        public string ProcessName { get; set; }
+
+        public string Machine { get; set; }
 
         public HashSet<ExceptionReportCustomDataSetDto> CustomDataSets { get; set; }
 
@@ -74,16 +96,10 @@
 
     public class ExceptionReportFileDto
     {
-        public ExceptionReportFileDto(string name, string fileName, string fullPath)
-        {
-            this.Name = name;
-            this.FileName = fileName;            
+        public ExceptionReportFileDto(string fullPath)
+        {       
             this.FullPath = fullPath;
         }
-
-        public string Name { get; set; }
-
-        public string FileName { get; set; }
 
         public string FullPath { get; set; }
     }
