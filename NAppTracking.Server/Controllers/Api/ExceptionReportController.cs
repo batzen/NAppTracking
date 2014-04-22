@@ -98,10 +98,8 @@
             {
                 var provider = new MultipartFormDataStreamProvider(tempPath);
 
-                // Read the form data.
                 await this.Request.Content.ReadAsMultipartAsync(provider);
                 
-                // This illustrates how to get the file names.
                 foreach (var fileData in provider.FileData)
                 {
                     var exceptionReportFile = this.db.ExceptionReportFiles.Create();
@@ -128,6 +126,7 @@
             {
                 this.db.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }
