@@ -29,6 +29,11 @@
             return Directory.Exists(path);
         }
 
+        public void DeleteDirectory(string path, bool recursive)
+        {
+            Directory.Delete(path, recursive);
+        }
+
         public bool FileExists(string path)
         {
             return File.Exists(path);

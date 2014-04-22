@@ -1,10 +1,8 @@
 ﻿namespace NAppTracking.Server.Controllers
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Net;
-    using System.Web;
     using System.Web.Mvc;
     using NAppTracking.Server.Configuration;
     using NAppTracking.Server.Entities;
@@ -18,13 +16,15 @@
         private readonly IAppConfiguration configuration;
         private readonly IFileStorageService fileStorageService;
         private readonly IFileSystemService fileSystemService;
+        private readonly IExceptionReportFileStorageService exceptionReportFileStorageService;
 
-        public ExceptionReportController(IEntitiesContext db, IAppConfiguration configuration, IFileStorageService fileStorageService, IFileSystemService fileSystemService)
+        public ExceptionReportController(IEntitiesContext db, IAppConfiguration configuration, IFileStorageService fileStorageService, IFileSystemService fileSystemService, IExceptionReportFileStorageService exceptionReportFileStorageService)
         {
             this.db = db;
             this.configuration = configuration;
             this.fileStorageService = fileStorageService;
             this.fileSystemService = fileSystemService;
+            this.exceptionReportFileStorageService = exceptionReportFileStorageService;
         }
 
         // GET: /ExceptionReport/
@@ -108,6 +108,8 @@
                 return new HttpUnauthorizedResult();
             }
 
+            this.exceptionReportFileStorageService.Delete(exceptionreport);
+
             db.ExceptionReports.Remove(exceptionreport);
 
             foreach (var file in exceptionreport.ExceptionReportFiles)
@@ -144,6 +146,7 @@
             {
                 db.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

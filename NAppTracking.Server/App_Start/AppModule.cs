@@ -30,6 +30,10 @@
             this.Bind<IFileStorageService>()
                 .To<FileSystemFileStorageService>()
                 .InSingletonScope();
+
+            this.Bind<IExceptionReportFileStorageService>()
+                .To<ExceptionReportFileStorageService>()
+                .InSingletonScope();
         }
     }
 }

@@ -41,9 +41,10 @@
             var request = new HttpRequestMessage(HttpMethod.Post, this.exceptionReportAddress);
 
             this.AddApiKeyHeader(request);
-
-            request.Content = new StringContent(JsonConvert.SerializeObject(report));
-            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            
+            var content = new StringContent(JsonConvert.SerializeObject(report));
+            content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            request.Content = content;
 
             try
             {
@@ -54,7 +55,7 @@
                     return await this.SendExceptionReportFiles(response.Headers.Location, report.ExceptionReportFiles);
                 }
 
-                return false;
+                return response.IsSuccessStatusCode;
             }
             catch (Exception e)
             {
@@ -77,10 +78,7 @@
 
             var content = new MultipartFormDataContent();
             
-            foreach (var file in reportFiles)
-            {
-                content.Add(new StreamContent(new FileStream(file.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read)), Path.GetFileName(file.FullPath), Path.GetFileName(file.FullPath));   
-            }            
+            AddFilesToContent(reportFiles, content);            
 
             request.Content = content;
 
@@ -94,6 +92,14 @@
             {
                 Console.WriteLine(e);
                 return false;
+            }
+        }
+
+        private static void AddFilesToContent(IEnumerable<ExceptionReportFileDto> reportFiles, MultipartFormDataContent content)
+        {
+            foreach (var file in reportFiles)
+            {
+                content.Add(new StreamContent(new FileStream(file.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read)), Path.GetFileName(file.FullPath), Path.GetFileName(file.FullPath));
             }
         }
 

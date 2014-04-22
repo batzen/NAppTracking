@@ -6,11 +6,13 @@
     {
         void CreateDirectory(string path);
 
-        void DeleteFile(string path);
-
         bool DirectoryExists(string path);
 
+        void DeleteDirectory(string path, bool recursive);
+
         bool FileExists(string path);
+
+        void DeleteFile(string path);
 
         Stream OpenRead(string path);
 
