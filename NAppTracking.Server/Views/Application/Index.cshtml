@@ -14,13 +14,10 @@
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
-        <th>
+        <th style="width: 65%">
             @Html.DisplayNameFor(model => model.Description)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ApiKey)
-        </th>
-        <th></th>
+        <th style="text-align: right;"></th>
     </tr>
 
     @foreach (var item in Model)
@@ -31,9 +28,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApiKey)
             </td>
             <td>
                 @Html.ActionLink("Details", "Details", new { item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })

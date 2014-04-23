@@ -340,6 +340,7 @@
     <Content Include="Views\ExceptionReport\Details.cshtml" />
     <Content Include="Views\ExceptionReport\Index.cshtml" />
     <Content Include="Views\Shared\_ApplicationsPartial.cshtml" />
+    <Content Include="Views\Shared\_ExceptionReportsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
