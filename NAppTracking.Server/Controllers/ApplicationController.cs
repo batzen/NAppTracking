@@ -4,40 +4,20 @@
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Mvc;
     using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.Owin;
     using NAppTracking.Server.Entities;
 
     [Authorize]
     public class ApplicationController : Controller
     {
-        private readonly IEntitiesContext db;
-        private ApplicationUserManager userManager;
+        private readonly EntitiesContext db;
+        private readonly ApplicationUserManager userManager;
 
-        public ApplicationController(IEntitiesContext db)
+        public ApplicationController(EntitiesContext db, ApplicationUserManager userManager)
         {
             this.db = db;
-        }
-
-        public ApplicationController(IEntitiesContext db, ApplicationUserManager userManager)
-        {
-            this.db = db;
-            this.UserManager = userManager;
-        }
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return this.userManager ?? this.HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-
-            private set
-            {
-                this.userManager = value;
-            }
+            this.userManager = userManager;
         }
 
         // GET: /Application/
@@ -82,7 +62,7 @@
             if (ModelState.IsValid)
             {                
                 this.db.TrackingApplications.Add(trackingapplication);
-                var currentUser = await this.UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var currentUser = await this.userManager.FindByIdAsync(User.Identity.GetUserId());
                 trackingapplication.Owners.Add(currentUser);
                 await this.db.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -212,7 +192,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
 
-            var owner = await this.UserManager.FindByNameAsync(username);
+            var owner = await this.userManager.FindByNameAsync(username);
             if (owner == null)
             {
                 // todo: implement proper user notification for error
@@ -227,16 +207,6 @@
             }
 
             return this.RedirectToAction("ManageOwners", new { id });
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                this.db.Dispose();
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

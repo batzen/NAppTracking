@@ -17,7 +17,7 @@
         {
             var apiKey = ApiKeyHelper.GetApiKey(actionContext.Request);;
 
-            var db = DependencyResolver.Current.GetService<IEntitiesContext>();
+            var db = DependencyResolver.Current.GetService<EntitiesContext>();
 
             var trackingApplication = db.TrackingApplications.FirstOrDefault(x => x.ApiKey == apiKey);
 

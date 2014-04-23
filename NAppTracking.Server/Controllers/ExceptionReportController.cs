@@ -12,13 +12,13 @@
     [Authorize]
     public class ExceptionReportController : Controller
     {
-        private readonly IEntitiesContext db;
+        private readonly EntitiesContext db;
         private readonly IAppConfiguration configuration;
         private readonly IFileStorageService fileStorageService;
         private readonly IFileSystemService fileSystemService;
         private readonly IExceptionReportFileStorageService exceptionReportFileStorageService;
 
-        public ExceptionReportController(IEntitiesContext db, IAppConfiguration configuration, IFileStorageService fileStorageService, IFileSystemService fileSystemService, IExceptionReportFileStorageService exceptionReportFileStorageService)
+        public ExceptionReportController(EntitiesContext db, IAppConfiguration configuration, IFileStorageService fileStorageService, IFileSystemService fileSystemService, IExceptionReportFileStorageService exceptionReportFileStorageService)
         {
             this.db = db;
             this.configuration = configuration;
@@ -138,16 +138,6 @@
             var path = this.fileSystemService.BuildPath(string.Format("Application_{0}/Exception_{1}/{2}_{3}", exceptionReportFile.ExceptionReport.Application.Id, exceptionReportFile.ExceptionReport.Id, exceptionReportFile.StorageId, exceptionReportFile.FileName));
 
             return this.File(path, exceptionReportFile.MIMEType, exceptionReportFile.FileName);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

@@ -17,11 +17,11 @@
     [ApiAuthorize]
     public class ExceptionReportController : ApiController
     {
-        private readonly IEntitiesContext db;
+        private readonly EntitiesContext db;
         private readonly IFileSystemService fileSystemService;
         private readonly IExceptionReportFileStorageService exceptionReportFileStorageService;        
 
-        public ExceptionReportController(IEntitiesContext db, IFileSystemService fileSystemService, IExceptionReportFileStorageService exceptionReportFileStorageService)
+        public ExceptionReportController(EntitiesContext db, IFileSystemService fileSystemService, IExceptionReportFileStorageService exceptionReportFileStorageService)
         {
             this.db = db;
             this.fileSystemService = fileSystemService;
@@ -118,16 +118,6 @@
             {
                 return this.InternalServerError(e);
             }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                this.db.Dispose();
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

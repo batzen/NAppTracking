@@ -1,5 +1,6 @@
 ﻿namespace NAppTracking.Server
 {
+    using Microsoft.AspNet.Identity;
     using NAppTracking.Server.Configuration;
     using NAppTracking.Server.Entities;
     using NAppTracking.Server.Services;
@@ -14,13 +15,21 @@
         public override void Load()
         {
             var configuration = new ConfigurationService();
-            Bind<ConfigurationService>()
+            this.Bind<ConfigurationService>()
                 .ToMethod(context => configuration);
-            Bind<IAppConfiguration>()
+            this.Bind<IAppConfiguration>()
                 .ToMethod(context => configuration.Current);
 
-            this.Bind<IEntitiesContext>()
+            this.Bind<EntitiesContext>()
                 .To<EntitiesContext>()
+                .InRequestScope();
+
+            this.Bind<IUserStore<ApplicationUser>>()
+                .To<ApplicationUserStore>()
+                .InRequestScope();
+
+            this.Bind<ApplicationUserManager>()
+                .To<ApplicationUserManager>()
                 .InRequestScope();
 
             this.Bind<IFileSystemService>()
