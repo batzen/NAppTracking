@@ -14,25 +14,26 @@
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
-        <th style="width: 65%">
+        <th style="width: 40%">
             @Html.DisplayNameFor(model => model.Description)
         </th>
-        <th style="text-align: right;"></th>
+        <th></th>
     </tr>
 
     @foreach (var item in Model)
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.ActionLink(item.Name, "Details", new { item.Id })
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
-            <td>
-                @Html.ActionLink("Details", "Details", new { item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
+            <td style="text-align: right;">
                 @Html.ActionLink("Exception reports", "Index", "ExceptionReport", new { applicationId = item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
-                @Html.ActionLink("Delete", "Delete", new { item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
+                @Html.ActionLink("Edit", "Edit", new { item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
+                @Html.ActionLink("Manage owners", "ManageOwners", new { item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
+                @Html.ActionLink("Delete", "Delete", new { item.Id }, new { @class = "btn btn-danger btn-sm", role = "button" })
             </td>
         </tr>
     }

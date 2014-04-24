@@ -15,7 +15,7 @@
     </div>
     <pre class="error-detail">@Html.DisplayFor(model => model.Details)
     </pre>
-    <p class="error-time">occurred <b title="@exceptionReport.CreatedUtc.ToLongDateString() at @exceptionReport.CreatedUtc.ToLongTimeString()">@exceptionReport.CreatedUtc.Humanize()</b> on @exceptionReport.Machine (Process: @exceptionReport.ProcessName) @Html.ActionLink("Delete", "Delete", new { exceptionReport.Id }, new { @class = "btn btn-default btn-xs", role = "button" })</p>
+    <p class="error-time">occurred <b title="@exceptionReport.CreatedUtc.ToLongDateString() at @exceptionReport.CreatedUtc.ToLongTimeString()">@exceptionReport.CreatedUtc.Humanize()</b> on @exceptionReport.Machine (Process: @exceptionReport.ProcessName) @Html.ActionLink("Delete", "Delete", new { exceptionReport.Id }, new { @class = "btn btn-danger btn-xs", role = "button" })</p>
 
     <div class="row">
         <div class="col-md-6">
