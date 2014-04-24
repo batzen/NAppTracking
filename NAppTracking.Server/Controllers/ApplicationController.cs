@@ -177,9 +177,10 @@
             return this.View(trackingapplication);
         }
 
+        [ActionName("ManageOwners")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddOwnerConfirmed(int id, string username)
+        public async Task<ActionResult> AddOwner(int id, string username)
         {
             var trackingapplication = await this.db.TrackingApplications.FindAsync(id);
             if (trackingapplication == null)
@@ -195,8 +196,9 @@
             var owner = await this.userManager.FindByNameAsync(username);
             if (owner == null)
             {
-                // todo: implement proper user notification for error
-                return this.HttpNotFound();
+                this.ModelState.AddModelError(string.Empty, "User not found");
+                this.ViewBag.Username = username;
+                return this.View(trackingapplication);
             }
 
             // Prevent duplicate owner addition
@@ -206,7 +208,33 @@
                 await this.db.SaveChangesAsync();
             }
 
-            return this.RedirectToAction("ManageOwners", new { id });
+            return this.View(trackingapplication);
+        }
+
+        public async Task<ActionResult> RemoveOwner(int id, string ownerId)
+        {
+            var trackingapplication = await this.db.TrackingApplications.FindAsync(id);
+            if (trackingapplication == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (!trackingapplication.IsOwner(this.User))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
+
+            var owner = await this.userManager.FindByIdAsync(ownerId);
+            if (owner == null)
+            {
+                // todo: implement proper user notification for error
+                return this.HttpNotFound();
+            }
+
+            trackingapplication.Owners.Remove(owner);
+            await this.db.SaveChangesAsync();
+
+            return this.RedirectToAction("ManageOwners", new { trackingapplication.Id });
         }
     }
 }

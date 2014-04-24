@@ -11,7 +11,7 @@
             this.UserValidator = new UserValidator<ApplicationUser>(this)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true,
+                //RequireUniqueEmail = true,
             };
 
             this.PasswordValidator = new PasswordValidator

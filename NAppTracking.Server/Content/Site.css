@@ -34,7 +34,16 @@ input[type="checkbox"].input-validation-error {
 }
 
 .validation-summary-errors {
-    color: #b94a48;
+    background-color: #fbe3e4;
+    color: #c13a3f;
+    font-weight: 600;
+    border: solid 1px;
+    font-size: 1.3em;
+    padding: 10px;
+}
+
+.validation-summary-errors ul, .validation-summary-errors li {
+    margin-bottom: 0
 }
 
 .validation-summary-valid {
@@ -44,6 +53,14 @@ input[type="checkbox"].input-validation-error {
 .pagination {
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.message {
+    background-color: #eff7fa;
+    border: solid 1px;
+    color: #caa452;
+    font-size: 1.3em;
+    padding: 10px;
 }
 
 .error-detail {

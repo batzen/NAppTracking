@@ -342,6 +342,7 @@
     <Content Include="Views\ExceptionReport\Index.cshtml" />
     <Content Include="Views\Shared\_ApplicationsPartial.cshtml" />
     <Content Include="Views\Shared\_ExceptionReportsPartial.cshtml" />
+    <Content Include="Views\Application\ManageOwners.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

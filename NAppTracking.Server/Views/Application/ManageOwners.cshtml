@@ -1,0 +1,59 @@
+﻿@using Microsoft.AspNet.Identity
+@model NAppTracking.Server.Entities.TrackingApplication
+
+@{
+    ViewBag.Title = "Manage owners " + Model.Name;
+}
+
+<h2>Manage Owners for @Model.Name</h2>
+
+@Html.ValidationSummary(true)
+
+<h2>Current Owners</h2>
+<ul id="owner-list">
+    @foreach (var owner in @Model.Owners)
+    {
+        <li>
+            <span>@owner.UserName</span>
+            @if (owner.Id == this.User.Identity.GetUserId())
+            {
+                <em>(that&#8217;s you!)</em>
+            }
+            else
+            {
+                @Html.ActionLink("Remove", "RemoveOwner", new { Model.Id, ownerId = owner.Id })
+            }
+        </li>
+    }
+</ul>
+
+<h2>Add Owner</h2>
+<p>
+    Enter an owner's username to add them as a owner.
+</p>
+<p class="message">
+    NOTE: All owners have full control over their applications, including the ability to remove other users as owners.
+</p>
+
+@using (Html.BeginForm("ManageOwners", "Application", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="Username">Username</label>
+        <div class="col-md-10">
+            <input name="Username" class="form-control" id="Username" aria-invalid="false" type="text" value="@this.ViewBag.Username">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Add owner" class="btn btn-primary btn-sm" />
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
