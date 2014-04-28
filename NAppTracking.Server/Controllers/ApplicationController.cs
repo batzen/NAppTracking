@@ -211,6 +211,8 @@
             return this.View(trackingapplication);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveOwner(int id, string ownerId)
         {
             var trackingapplication = await this.db.TrackingApplications.FindAsync(id);

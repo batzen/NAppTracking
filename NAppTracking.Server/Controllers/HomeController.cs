@@ -6,6 +6,11 @@
     {
         public ActionResult Index()
         {
+            if (this.Request.IsAuthenticated)
+            {
+                return this.RedirectToAction("Index", "Application");
+            }
+
             return View();
         }
 

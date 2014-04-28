@@ -2,10 +2,11 @@
 @model NAppTracking.Server.Entities.TrackingApplication
 
 @{
-    ViewBag.Title = "Manage owners " + Model.Name;
+    ViewBag.Title = "Manage owners of " + Model.Name;
 }
 
-<h2>Manage Owners for @Model.Name</h2>
+<h2>@ViewBag.Title</h2>
+<hr />
 
 @Html.ValidationSummary(true)
 
@@ -14,14 +15,21 @@
     @foreach (var owner in @Model.Owners)
     {
         <li>
-            <span>@owner.UserName</span>
+            <span style="float: left">@owner.UserName</span>
             @if (owner.Id == this.User.Identity.GetUserId())
             {
-                <em>(that&#8217;s you!)</em>
+                <em>&nbsp;(that&#8217;s you!)</em>
             }
             else
             {
-                @Html.ActionLink("Remove", "RemoveOwner", new { Model.Id, ownerId = owner.Id })
+                using (Html.BeginForm("RemoveOwner", "Application"))
+                {
+                    @Html.AntiForgeryToken()
+                    
+                    <input type="hidden" name="id" value="@Model.Id"/>
+                    <input type="hidden" name="ownerId" value="@owner.Id"/>
+                    <input type="submit" value="Remove" style="margin-left: 2em" class="btn btn-primary btn-xs" />
+                }
             }
         </li>
     }

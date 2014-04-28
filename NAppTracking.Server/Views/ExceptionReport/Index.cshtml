@@ -9,7 +9,8 @@
     var paging = Html.PagedListPager(Model, page => Url.Action("Index", new {page}), PagedListHelper.DefaultOptions);
 }
 
-<h2>Exceptionreports</h2>
+<h2>@ViewBag.Title</h2>
+<hr />
 
 @paging
 
