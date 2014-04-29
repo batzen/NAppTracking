@@ -3,6 +3,12 @@
     ViewBag.Title = "Edit " + Model.Name;
 }
 
+<ul class="breadcrumb">
+    <li><a href="~/">Home</a></li>
+    <li><a href="@Url.Action("Index")">Applications</a></li>
+    <li class="active">@ViewBag.Title</li>
+</ul>
+
 <h2>@ViewBag.Title</h2>
 <hr />
 
@@ -49,6 +55,8 @@
 
 <div>
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default btn-sm", role = "button" })
+    @Html.ActionLink("Manage owners", "ManageOwners", new { Model.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
+    @Html.ActionLink("Delete", "Delete", new { Model.Id }, new { @class = "btn btn-danger btn-sm", role = "button" })
 </div>
 
 @section Scripts {

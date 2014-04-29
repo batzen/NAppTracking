@@ -6,6 +6,12 @@
     var exceptionReport = Model;
 }
 
+<ul class="breadcrumb">
+    <li><a href="~/">Home</a></li>
+    <li><a href="@Url.Action("Index", new { applicationId = Model.Application.Id })">Exception reports</a></li>
+    <li class="active">@ViewBag.Title</li>
+</ul>
+
 <div>
     <div class="page-header">
         <h2>

@@ -4,12 +4,14 @@
     ViewBag.Title = "Applications";
 }
 
-<h2>@ViewBag.Title</h2>
+<ul class="breadcrumb">
+    <li><a href="~/">Home</a></li>
+    <li class="active">@ViewBag.Title</li>
+</ul>
+
+<h2>@ViewBag.Title @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary btn-sm", role = "button" })</h2>
 <hr />
 
-<p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary btn-sm", role = "button" })
-</p>
 <table class="table table-hover table-striped table-condensed">
     <tr>
         <th>
@@ -25,7 +27,7 @@
     {
         <tr>
             <td>
-                @Html.ActionLink(item.Name, "Details", new { item.Id })
+                @Html.ActionLink(item.Name, "Edit", new { item.Id })
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
@@ -33,8 +35,6 @@
             <td style="text-align: right;">
                 @Html.ActionLink("Exception reports", "Index", "ExceptionReport", new { applicationId = item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
                 @Html.ActionLink("Edit", "Edit", new { item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
-                @Html.ActionLink("Manage owners", "ManageOwners", new { item.Id }, new { @class = "btn btn-default btn-sm", role = "button" })
-                @Html.ActionLink("Delete", "Delete", new { item.Id }, new { @class = "btn btn-danger btn-sm", role = "button" })
             </td>
         </tr>
     }

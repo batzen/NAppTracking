@@ -4,6 +4,13 @@
     ViewBag.Title = "Delete application";
 }
 
+<ul class="breadcrumb">
+    <li><a href="~/">Home</a></li>
+    <li><a href="@Url.Action("Index")">Applications</a></li>
+    <li><a href="@Url.Action("Edit", new { Model.Id })">@Model.Name</a></li>
+    <li class="active">@ViewBag.Title</li>
+</ul>
+
 <h2>@ViewBag.Title</h2>
 <hr />
 

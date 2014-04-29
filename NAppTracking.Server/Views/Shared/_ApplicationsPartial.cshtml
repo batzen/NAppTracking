@@ -7,7 +7,7 @@
             <li class="divider"></li>
             @foreach (var application in this.User.AsApplicationUser().Applications)
             {
-                <li><a href="@Url.Action("Details", "Application", new { application.Id })">@application.Name</a></li>        
+                <li><a href="@Url.Action("Edit", "Application", new { application.Id })">@application.Name</a></li>        
             }
         </ul>
     </li>

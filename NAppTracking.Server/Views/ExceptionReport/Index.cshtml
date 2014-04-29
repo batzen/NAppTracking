@@ -4,10 +4,15 @@
 @model IPagedList<NAppTracking.Server.Entities.ExceptionReport>
 
 @{
-    ViewBag.Title = "Exceptionreports";
+    ViewBag.Title = "Exception reports";
 
-    var paging = Html.PagedListPager(Model, page => Url.Action("Index", new {page}), PagedListHelper.DefaultOptions);
+    var paging = Html.PagedListPager(Model, page => Url.Action("Index", new { page }), PagedListHelper.DefaultOptions);
 }
+
+<ul class="breadcrumb">
+    <li><a href="~/">Home</a></li>
+    <li class="active">@ViewBag.Title</li>
+</ul>
 
 <h2>@ViewBag.Title</h2>
 <hr />

@@ -4,6 +4,13 @@
     ViewBag.Title = "Delete exception report";
 }
 
+<ul class="breadcrumb">
+    <li><a href="~/">Home</a></li>
+    <li><a href="@Url.Action("Index", new { applicationId = Model.Application.Id })">Exception reports</a></li>
+    <li><a href="@Url.Action("Details", new { Model.Id })">@Model.Message</a></li>
+    <li class="active">@ViewBag.Title</li>
+</ul>
+
 <h2>@ViewBag.Title</h2>
 <hr />
 
