@@ -6,7 +6,7 @@
 @{
     ViewBag.Title = "Exception reports";
 
-    var paging = Html.PagedListPager(Model, page => Url.Action("Index", new { page }), PagedListHelper.DefaultOptions);
+    var paging = Html.PagedListPager(Model, page => Url.Action("Index", new { id = page, q = ViewBag.SearchQuery }), PagedListHelper.DefaultOptions);
 }
 
 <ul class="breadcrumb">
@@ -14,7 +14,15 @@
     <li class="active">@ViewBag.Title</li>
 </ul>
 
-<h2>@ViewBag.Title</h2>
+<h2>
+    <span style="float: left">@ViewBag.Title&nbsp;&nbsp;</span>
+    @using (Html.BeginForm("Index", "ExceptionReport", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+    {
+        <input type="text" name="q" class="form-control" style="float: left" placeholder="search exception reports" value="@ViewBag.SearchQuery" />
+        <span>&nbsp;</span>
+        <button type="submit" class="btn btn-success btn-sm" style="float: left"><span class="glyphicon glyphicon-search"></span></button>
+    }
+</h2>
 <hr />
 
 @paging

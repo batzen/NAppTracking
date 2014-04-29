@@ -10,7 +10,11 @@
             {
                 return new PagedListRenderOptions
                 {
-                    UlElementClasses = new[] {"pagination pagination-sm"}
+                    UlElementClasses = new[] { "pagination pagination-sm" },
+                    Display = PagedListDisplayMode.Always,
+                    DisplayEllipsesWhenNotShowingAllPageNumbers = true,
+                    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                    DisplayLinkToNextPage = PagedListDisplayMode.Always
                 };
             }
         }

@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Net;
     using System.Web.Mvc;
+    using Microsoft.Ajax.Utilities;
     using NAppTracking.Server.Configuration;
     using NAppTracking.Server.Entities;
     using NAppTracking.Server.Services;
@@ -29,8 +30,10 @@
 
         // GET: /ExceptionReport/
         // id is used as page and just called id here so we are able to use the default routing
-        public ActionResult Index(int? id, int? applicationId)
+        public ActionResult Index(int? id, int? applicationId, string q)
         {
+            this.ViewBag.SearchQuery = q;
+
             var currentPageIndex = id.HasValue
                 ? id.Value
                 : 1;
@@ -38,11 +41,17 @@
             var pageSize = configuration.DefaultPageSize;
 
             var reports = db.ExceptionReports
-                .Where(x => (applicationId.HasValue == false || x.Application.Id == applicationId) && x.Application.Owners.Any(u => u.UserName == this.User.Identity.Name))
-                .OrderByDescending(x => x.CreatedUtc)
+                .Where(x => (applicationId.HasValue == false || x.Application.Id == applicationId) && x.Application.Owners.Any(u => u.UserName == this.User.Identity.Name));
+
+            if (q.IsNullOrWhiteSpace() == false)
+            {
+                reports = reports.Where(report => report.Message.Contains(q));
+            }
+
+            var pagedAndOrderedReports = reports.OrderByDescending(x => x.CreatedUtc)
                 .ToPagedList(currentPageIndex, pageSize);
 
-            return View(reports);
+            return View(pagedAndOrderedReports);
         }
 
         // GET: /ExceptionReport/Details/5
