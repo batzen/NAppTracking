@@ -19,7 +19,6 @@
     @using (Html.BeginForm("Index", "ExceptionReport", FormMethod.Get, new { @class = "form-horizontal", role = "form", style = "display: inline" }))
     {
         <input type="text" name="q" class="form-control" style="display: inline" placeholder="search exception reports" value="@ViewBag.SearchQuery" />
-        <span>&nbsp;</span>
         <button type="submit" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-search"></span></button>
     }
 </h2>
