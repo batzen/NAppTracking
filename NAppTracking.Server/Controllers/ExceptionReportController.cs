@@ -146,6 +146,11 @@
 
             var path = this.fileSystemService.BuildPath(string.Format("Application_{0}/Exception_{1}/{2}_{3}", exceptionReportFile.ExceptionReport.Application.Id, exceptionReportFile.ExceptionReport.Id, exceptionReportFile.StorageId, exceptionReportFile.FileName));
 
+            if (this.fileSystemService.FileExists(path) == false)
+            {
+                return this.HttpNotFound();
+            }
+
             return this.File(path, exceptionReportFile.MIMEType, exceptionReportFile.FileName);
         }
     }

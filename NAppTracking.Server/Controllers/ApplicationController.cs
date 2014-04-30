@@ -199,6 +199,7 @@
                 return HttpNotFound();
             }
 
+            // The user is not allowed to remove himself
             if (!trackingapplication.IsOwner(this.User))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Forbidden);

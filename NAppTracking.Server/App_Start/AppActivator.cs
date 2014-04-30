@@ -26,7 +26,10 @@
 
         public static void PostStart()
         {
-            CreateDatabase();
+            if (NinjectWebCommon.Kernel.Get<IAppConfiguration>().IsDemoEnabled)
+            {
+                CreateDemoDatabase();
+            }
         }
 
         public static void Stop()
@@ -34,7 +37,7 @@
             NinjectWebCommon.Stop();
         }
 
-        private static void CreateDatabase()
+        private static void CreateDemoDatabase()
         {
             var db = DependencyResolver.Current.GetService<EntitiesContext>();
 
@@ -44,12 +47,17 @@
                 // Just drop all tables multiple times. This way we can delete all tables regardless of PKs and FKs.
                 for (var i = 0; i < 5; i++)
                 {
-                    db.Database.ExecuteSqlCommand("exec sp_MSforeachtable 'DROP TABLE ?'");   
+                    try
+                    {
+                        db.Database.ExecuteSqlCommand("exec sp_MSforeachtable 'DROP TABLE ?'");   
+                    }
+                    catch
+                    {
+                    }                    
                 }                
             }
 
-            var haveToCreateDemoDatabaseEntries = NinjectWebCommon.Kernel.Get<IAppConfiguration>().IsDemoEnabled
-                                                  && (db.Database.CreateIfNotExists() || db.Users.Any() == false);
+            var haveToCreateDemoDatabaseEntries = db.Database.CreateIfNotExists() || db.Users.Any() == false;
 
             if (haveToCreateDemoDatabaseEntries)
             {
@@ -64,7 +72,7 @@
 
             using (var userManager = DependencyResolver.Current.GetService<ApplicationUserManager>())
             {
-                var result = await userManager.CreateAsync(demoUser, "demodemo");
+                var result = await userManager.CreateAsync(demoUser, "demopassword");
                 if (!result.Succeeded)
                 {
                     throw new Exception(string.Join(Environment.NewLine, result.Errors));

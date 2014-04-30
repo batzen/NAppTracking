@@ -22,20 +22,20 @@
     @foreach (var owner in @Model.Owners)
     {
         <li>
-            <span style="float: left">@owner.UserName</span>
+            <span>@owner.UserName</span>
             @if (owner.Id == this.User.Identity.GetUserId())
             {
                 <em>&nbsp;(that&#8217;s you!)</em>
             }
             else
             {
-                using (Html.BeginForm("RemoveOwner", "Application"))
+                using (Html.BeginForm("RemoveOwner", "Application", FormMethod.Post, new { role = "form", style = "display: inline" }))
                 {
                     @Html.AntiForgeryToken()
                     
                     <input type="hidden" name="id" value="@Model.Id"/>
                     <input type="hidden" name="ownerId" value="@owner.Id"/>
-                    <input type="submit" value="Remove" style="margin-left: 2em" class="btn btn-primary btn-xs" />
+                    <input type="submit" value="Remove" style="margin-left: 2em; display: inline" class="btn btn-primary btn-xs" />
                 }
             }
         </li>

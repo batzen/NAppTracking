@@ -12,13 +12,13 @@
     <li class="active">@ViewBag.Title</li>
 </ul>
 
+<h2>
+    @Html.DisplayFor(model => model.Message)<br />
+    <small>@Html.DisplayFor(model => model.Type)</small>
+</h2>
+<hr/>
+
 <div>
-    <div class="page-header">
-        <h2>
-            @Html.DisplayFor(model => model.Message)<br />
-            <small>@Html.DisplayFor(model => model.Type)</small>
-        </h2>
-    </div>
     <pre class="error-detail">@Html.DisplayFor(model => model.Details)
     </pre>
     <p class="error-time">occurred <b title="@exceptionReport.CreatedUtc.ToLongDateString() at @exceptionReport.CreatedUtc.ToLongTimeString()">@exceptionReport.CreatedUtc.Humanize()</b> on @exceptionReport.Machine (Process: @exceptionReport.ProcessName) @Html.ActionLink("Delete", "Delete", new { exceptionReport.Id }, new { @class = "btn btn-danger btn-xs", role = "button" })</p>
