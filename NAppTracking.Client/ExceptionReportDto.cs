@@ -11,7 +11,7 @@
         {
         }
 
-        public ExceptionReportDto(Exception exception, HashSet<ExceptionReportCustomDataSetDto> customData = null, HashSet<ExceptionReportFileDto> exceptionReportFiles = null)
+        public ExceptionReportDto(Exception exception, string comment = null, HashSet<ExceptionReportCustomDataSetDto> customData = null, HashSet<ExceptionReportFileDto> exceptionReportFiles = null)
         {
             if (exception == null)
             {
@@ -20,13 +20,15 @@
 
             this.Exception = exception;
 
-            var causingException = GetCausingException(exception);
+            var causingException = GetRootException(exception);
 
             this.Type = causingException.GetType().ToString();
             this.Message = causingException.Message;
 
             // Use original exception for details because ToString of that exception contains the details (stacktrace etc.) in the correct order
             this.Details = exception.ToString();
+
+            this.Comment = comment;
 
             this.ProcessName = Process.GetCurrentProcess().ProcessName;
 
@@ -37,7 +39,7 @@
             this.ExceptionReportFiles = exceptionReportFiles ?? new HashSet<ExceptionReportFileDto>();
         }
 
-        private Exception GetCausingException(Exception exception)
+        private static Exception GetRootException(Exception exception)
         {
             var causingException = exception;
 
@@ -57,6 +59,8 @@
         public string Message { get; set; }
 
         public string Details { get; set; }
+
+        public string Comment { get; set; }
 
         public string ProcessName { get; set; }
 

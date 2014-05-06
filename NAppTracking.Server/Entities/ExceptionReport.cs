@@ -27,6 +27,8 @@
 
         public string Details { get; set; }
 
+        public string Comment { get; set; }
+
         public string ProcessName { get; set; }
 
         public string Machine { get; set; }

@@ -1,6 +1,7 @@
 ﻿namespace NAppTracking.Server
 {
     using System;
+    using System.Data;
     using System.Linq;
     using System.Security.Claims;
     using System.Web.Helpers;
@@ -44,12 +45,21 @@
             if (db.Database.Exists()
                 && db.Database.CompatibleWithModel(false) == false)
             {
+                if (db.Database.Connection.State != ConnectionState.Open)
+                {
+                    db.Database.Connection.Open();
+                }
+
                 // Just drop all tables multiple times. This way we can delete all tables regardless of PKs and FKs.
                 for (var i = 0; i < 5; i++)
                 {
                     try
                     {
-                        db.Database.ExecuteSqlCommand("exec sp_MSforeachtable 'DROP TABLE ?'");   
+                        using (var command = db.Database.Connection.CreateCommand())
+                        {
+                            command.CommandText = "exec sp_MSforeachtable 'DROP TABLE ?'";
+                            command.ExecuteNonQuery();
+                        }
                     }
                     catch
                     {

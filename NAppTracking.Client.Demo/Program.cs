@@ -8,7 +8,8 @@
         public static int Main(string[] args)
         {
             var client = new TrackingClient(new Uri("http://batzen/NAppTracking.Server/"), Guid.Empty);
-            //var client = new TrackingClient(new Uri("http://localhost.fiddler:1856/"), Guid.Empty);        
+            //var client = new TrackingClient(new Uri("http://localhost.fiddler:1856/"), Guid.Empty);
+            //var client = new TrackingClient(new Uri("http://napptracking.azurewebsites.net/"), Guid.Empty);
 
             try
             {
@@ -19,6 +20,7 @@
                 catch (Exception exception)
                 {
                     var t = client.SendAsync(exception, 
+                        "Sample comment provided by a potential user",
                         new HashSet<ExceptionReportCustomDataSetDto> 
                         { 
                             new ExceptionReportCustomDataSetDto("Custom")
@@ -35,6 +37,7 @@
                         },
                         new HashSet<ExceptionReportFileDto>
                         {
+                            new ExceptionReportFileDto("Demo.txt"),
                             new ExceptionReportFileDto("Demo.txt")
                         });
 

@@ -29,9 +29,9 @@
 
         public Guid ApiKey { get; private set; }
 
-        public async Task<bool> SendAsync(Exception ex, HashSet<ExceptionReportCustomDataSetDto> customData = null, HashSet<ExceptionReportFileDto> exceptionReportFiles = null)
+        public async Task<bool> SendAsync(Exception ex, string comment = null, HashSet<ExceptionReportCustomDataSetDto> customData = null, HashSet<ExceptionReportFileDto> exceptionReportFiles = null)
         {
-            return await this.SendAsync(new ExceptionReportDto(ex, customData, exceptionReportFiles));
+            return await this.SendAsync(new ExceptionReportDto(ex, comment, customData, exceptionReportFiles));
         }
 
         public async Task<bool> SendAsync(ExceptionReportDto report)

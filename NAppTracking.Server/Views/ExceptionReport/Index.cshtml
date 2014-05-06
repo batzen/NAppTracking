@@ -15,7 +15,7 @@
 </ul>
 
 <h2>
-    <span>@ViewBag.Title&nbsp;&nbsp;</span>
+    <span>@ViewBag.Title</span>
     @using (Html.BeginForm("Index", "ExceptionReport", FormMethod.Get, new { @class = "form-horizontal", role = "form", style = "display: inline" }))
     {
         <input type="text" name="q" class="form-control" style="display: inline" placeholder="search exception reports" value="@ViewBag.SearchQuery" />
