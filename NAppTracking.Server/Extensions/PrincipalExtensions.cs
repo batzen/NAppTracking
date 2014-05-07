@@ -14,6 +14,12 @@
 
         public static ApplicationUser AsApplicationUser(this IPrincipal user)
         {
+            if (user == null
+                || user.Identity == null)
+            {
+                return null;
+            }
+
             var userManager = DependencyResolver.Current.GetService<ApplicationUserManager>();
 
             return user.Identity.IsAuthenticated

@@ -1,8 +1,11 @@
 ﻿namespace NAppTracking.Server
 {
+    using System;
     using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin;
     using Microsoft.Owin.Security.Cookies;
+    using NAppTracking.Server.Entities;
     using Owin;
 
     public partial class Startup
@@ -25,9 +28,10 @@
                             ctx.Response.Redirect(ctx.RedirectUri);
                         }
                     },
-                    ////OnValidateIdentity = ApplicationCookieIdentityValidator.OnValidateIdentity(
-                    ////                        validateInterval: TimeSpan.FromMinutes(0),
-                    ////                        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
+                    validateInterval: TimeSpan.FromMinutes(30),
+                    regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+
                 }
             });
 
