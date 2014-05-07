@@ -1,6 +1,10 @@
 ﻿namespace NAppTracking.Server
 {
     using System;
+    using System.Security.Claims;
+    using System.Security.Principal;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin;
@@ -28,9 +32,10 @@
                             ctx.Response.Redirect(ctx.RedirectUri);
                         }
                     },
-                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
-                    validateInterval: TimeSpan.FromMinutes(30),
-                    regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                    //OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
+                    //validateInterval: TimeSpan.FromSeconds(30),
+                    //regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                    OnValidateIdentity = OnValidateIdentity
 
                 }
             });
@@ -52,6 +57,63 @@
             //   appSecret: "");
 
             app.UseGoogleAuthentication();
+        }
+
+        private static async Task OnValidateIdentity(CookieValidateIdentityContext context)
+        {
+            var validateInterval = TimeSpan.FromSeconds(30);
+
+            var currentUtc = DateTimeOffset.UtcNow;
+            if (context.Options != null 
+                && context.Options.SystemClock != null)
+            {
+                currentUtc = context.Options.SystemClock.UtcNow;
+            }
+
+            var issuedUtc = context.Properties.IssuedUtc;
+            var validate = !issuedUtc.HasValue;
+
+            if (issuedUtc.HasValue)
+            {
+                validate = currentUtc.Subtract(issuedUtc.Value) > validateInterval;
+            }
+
+            if (!validate)
+            {
+                return;
+            }
+
+            var manager = DependencyResolver.Current.GetService<ApplicationUserManager>();
+            var userId = context.Identity.GetUserId();
+
+            if (manager != null
+                && userId != null)
+            {
+                var user = await manager.FindByIdAsync(userId).ConfigureAwait(false);
+                var reject = true;
+
+                if (user != null
+                    && manager.SupportsUserSecurityStamp)
+                {
+                    var securityStamp = context.Identity.FindFirstValue("AspNet.Identity.SecurityStamp");
+                    if (securityStamp == await manager.GetSecurityStampAsync(userId).ConfigureAwait(false))
+                    {
+                        reject = false;
+                        var identity = await user.GenerateUserIdentityAsync(manager);
+
+                        if (identity != null)
+                        {
+                            context.OwinContext.Authentication.SignIn(new[] {identity});
+                        }
+                    }
+                }
+
+                if (reject)
+                {
+                    context.RejectIdentity();
+                    context.OwinContext.Authentication.SignOut(new[] {context.Options.AuthenticationType});
+                }
+            }
         }
     }
 }
