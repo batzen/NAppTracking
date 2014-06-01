@@ -4,6 +4,8 @@ using NAppTracking.Server.Controllers;
 
 namespace NAppTracking.Server.Tests.Controllers
 {
+    using NAppTracking.Server.Tests.Mocks;
+
     [TestClass]
     public class HomeControllerTest
     {
@@ -11,7 +13,7 @@ namespace NAppTracking.Server.Tests.Controllers
         public void Index()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            HomeController controller = new HomeController {ControllerContext = new ControllerContext {HttpContext = new MockHttpContext()}};
 
             // Act
             ViewResult result = controller.Index() as ViewResult;
