@@ -1,14 +1,12 @@
 ﻿namespace NAppTracking.Server
 {
     using System;
-    using System.Security.Claims;
-    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin;
     using Microsoft.Owin.Security.Cookies;
+    using NAppTracking.Server.Configuration;
     using NAppTracking.Server.Entities;
     using Owin;
 
@@ -43,20 +41,7 @@
             // Use a cookie to temporarily store information about a user logging in with a third party login provider
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-            // Uncomment the following lines to enable logging in with third party login providers
-            //app.UseMicrosoftAccountAuthentication(
-            //    clientId: "",
-            //    clientSecret: "");
-
-            //app.UseTwitterAuthentication(
-            //   consumerKey: "",
-            //   consumerSecret: "");
-
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
-
-            app.UseGoogleAuthentication();
+            ConfigureThirdPartyLoginProviders(app);
         }
 
         private static async Task OnValidateIdentity(CookieValidateIdentityContext context)
@@ -113,6 +98,51 @@
                     context.RejectIdentity();
                     context.OwinContext.Authentication.SignOut(new[] {context.Options.AuthenticationType});
                 }
+            }
+        }
+
+        private static void ConfigureThirdPartyLoginProviders(IAppBuilder app)
+        {
+            var configurationService = DependencyResolver.Current.GetService<ConfigurationService>();
+
+            ConfigureFacebookLoginProvider(app, configurationService);
+
+            ConfigureGoogleLoginProvider(app, configurationService);
+
+            ConfigureMicrosoftLoginProvider(app, configurationService);
+
+            ConfigureTwitterLoginProvider(app, configurationService);
+        }
+
+        private static void ConfigureFacebookLoginProvider(IAppBuilder app, ConfigurationService configurationService)
+        {
+            if (Convert.ToBoolean(configurationService.ReadSetting("Auth.Facebook.Enabled")))
+            {
+                app.UseFacebookAuthentication(appId: configurationService.ReadSetting("Auth.Facebook.Id"), appSecret: configurationService.ReadSetting("Auth.Facebook.Id"));
+            }
+        }
+
+        private static void ConfigureGoogleLoginProvider(IAppBuilder app, ConfigurationService configurationService)
+        {
+            if (Convert.ToBoolean(configurationService.ReadSetting("Auth.Google.Enabled")))
+            {
+                app.UseGoogleAuthentication();
+            }
+        }
+
+        private static void ConfigureMicrosoftLoginProvider(IAppBuilder app, ConfigurationService configurationService)
+        {
+            if (Convert.ToBoolean(configurationService.ReadSetting("Auth.Microsoft.Enabled")))
+            {
+                app.UseMicrosoftAccountAuthentication(clientId: configurationService.ReadSetting("Auth.Microsoft.Id"), clientSecret: configurationService.ReadSetting("Auth.Microsoft.Secret"));
+            }
+        }
+
+        private static void ConfigureTwitterLoginProvider(IAppBuilder app, ConfigurationService configurationService)
+        {
+            if (Convert.ToBoolean(configurationService.ReadSetting("Auth.Twitter.Enabled")))
+            {
+                app.UseTwitterAuthentication(consumerKey: configurationService.ReadSetting("Auth.Twitter.Id"), consumerSecret: configurationService.ReadSetting("Auth.Twitter.Id"));
             }
         }
     }

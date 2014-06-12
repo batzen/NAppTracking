@@ -11,19 +11,19 @@
 
     public class ConfigurationService
     {
-        private const string SettingPrefix = "NAppTracking.";
+        private const string AppConfigurationPrefix = "NAppTracking.";
 
         private IAppConfiguration current;
 
-        public virtual IAppConfiguration Current
+        public virtual IAppConfiguration CurrentAppConfiguration
         {
-            get { return this.current ?? (this.current = this.ResolveSettings()); }
+            get { return this.current ?? (this.current = this.ResolveAppConfiguration()); }
             set { this.current = value; }
         }
 
-        public virtual IAppConfiguration ResolveSettings()
+        public virtual IAppConfiguration ResolveAppConfiguration()
         {
-            return this.ResolveConfigObject(new AppConfiguration(), SettingPrefix);
+            return this.ResolveConfigObject(new AppConfiguration(), AppConfigurationPrefix);
         }
 
         public virtual T ResolveConfigObject<T>(T instance, string prefix)

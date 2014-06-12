@@ -18,7 +18,7 @@
             this.Bind<ConfigurationService>()
                 .ToMethod(context => configuration);
             this.Bind<IAppConfiguration>()
-                .ToMethod(context => configuration.Current);
+                .ToMethod(context => configuration.CurrentAppConfiguration);
 
             this.Bind<EntitiesContext>()
                 .To<EntitiesContext>()
