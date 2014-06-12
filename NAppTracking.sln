@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAppTracking.Server", "NAppTracking.Server\NAppTracking.Server.csproj", "{2643E2C9-A767-4890-9C48-7AFE0F15811E}"
 EndProject
@@ -17,6 +17,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAppTracking.Client.Demo", "NAppTracking.Client.Demo\NAppTracking.Client.Demo.csproj", "{F29373F4-AFCD-417A-8754-C83ED1D246D5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAppTracking.Client", "NAppTracking.Client\NAppTracking.Client.csproj", "{27CE8985-824E-4BDE-BB8A-6C363AB66BAE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{46EB6F06-51E7-4B78-82B4-602EB6AD8DBB}"
+	ProjectSection(SolutionItems) = preProject
+		Build.cmd = Build.cmd
+		Build.ps1 = Build.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
