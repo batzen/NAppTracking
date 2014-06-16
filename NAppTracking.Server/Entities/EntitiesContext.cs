@@ -36,6 +36,12 @@
 
             modelBuilder.Entity<TrackingApplication>()
                 .HasKey(x => x.Id);
+            modelBuilder.Entity<TrackingApplication>()
+                .Property(x => x.Name)
+                .IsRequired();
+            modelBuilder.Entity<TrackingApplication>()
+                .Property(x => x.ApiKey)
+                .IsRequired();
 
             modelBuilder.Entity<TrackingApplication>()
                 .HasMany<ExceptionReport>(x => x.ExceptionReports)
