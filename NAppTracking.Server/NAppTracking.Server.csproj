@@ -63,6 +63,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.5.3.0.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation.Mvc">
+      <HintPath>..\packages\FluentValidation.MVC5.5.1.0.0\lib\Net45\FluentValidation.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="Humanizer, Version=1.26.1.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Humanizer.1.26.1\lib\portable-win+net40+sl50+wp8\Humanizer.dll</HintPath>
@@ -231,6 +237,7 @@
     <Compile Include="App_Start\AppActivator.cs" />
     <Compile Include="App_Start\AppModule.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="Entities\Validations\TrackingApplicationValidator.cs" />
     <Compile Include="Helpers\DemoDatabaseHelper.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />

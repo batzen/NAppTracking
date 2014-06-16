@@ -2,7 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using FluentValidation.Attributes;
+    using NAppTracking.Server.Entities.Validations;
 
+    [Validator(typeof(TrackingApplicationValidator))]
     public class TrackingApplication : IEntity
     {
         public TrackingApplication()
