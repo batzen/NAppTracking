@@ -23,7 +23,7 @@
         // GET: /Application/
         public async Task<ActionResult> Index()
         {
-            return View(await this.db.TrackingApplications.Where(x => x.IsOwner(this.User)).ToListAsync());
+            return View(await this.db.TrackingApplications.Where(x => x.Owners.Any(y => y.UserName == this.User.Identity.Name)).ToListAsync());
         }
 
         // GET: /Application/Create
