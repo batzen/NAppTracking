@@ -5,6 +5,7 @@
     using System.Net;
     using System.Web.Mvc;
     using Microsoft.Ajax.Utilities;
+    using Microsoft.AspNet.Identity;
     using NAppTracking.Server.Configuration;
     using NAppTracking.Server.Entities;
     using NAppTracking.Server.Services;
@@ -41,7 +42,8 @@
             var pageSize = configuration.DefaultPageSize;
 
             var reports = db.ExceptionReports
-                .Where(x => (applicationId.HasValue == false || x.Application.Id == applicationId) && x.Application.Owners.Any(u => u.UserName == this.User.Identity.Name));
+                .Where(x => (applicationId.HasValue == false || x.Application.Id == applicationId))
+                .ApplicationOwnedBy(this.User);
 
             if (q.IsNullOrWhiteSpace() == false)
             {

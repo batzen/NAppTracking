@@ -6,7 +6,7 @@
     using NAppTracking.Server.Entities.Validations;
 
     [Validator(typeof(TrackingApplicationValidator))]
-    public class TrackingApplication : IEntity
+    public class TrackingApplication : IEntity, IHasOwners
     {
         public TrackingApplication()
         {
