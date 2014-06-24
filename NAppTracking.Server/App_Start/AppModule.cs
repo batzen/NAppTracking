@@ -43,6 +43,14 @@
             this.Bind<IExceptionReportFileStorageService>()
                 .To<ExceptionReportFileStorageService>()
                 .InSingletonScope();
+
+            this.Bind<IMailSenderConfiguration>()
+                .To<MailSenderConfiguration>()
+                .InSingletonScope();
+
+            this.Bind<IMailSenderService>()
+                .To<MailSenderService>()
+                .InSingletonScope();
         }
     }
 }

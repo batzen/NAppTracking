@@ -6,7 +6,10 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Microsoft.AspNet.Identity.EntityFramework;
+    using NAppTracking.Server.Services;
+    using WebGrease.Css.Extensions;
 
     public class EntitiesContext : IdentityDbContext<ApplicationUser>
     {
@@ -97,16 +100,21 @@
 
         public override int SaveChanges()
         {
-            this.EnsureUtcDatesInEntities();
+            this.OnBeforeSavingChanges();
 
             return base.SaveChanges();
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            this.EnsureUtcDatesInEntities();
+            this.OnBeforeSavingChanges();
 
             return base.SaveChangesAsync(cancellationToken);
+        }
+
+        protected virtual void OnBeforeSavingChanges()
+        {
+            this.EnsureUtcDatesInEntities();
         }
 
         #endregion

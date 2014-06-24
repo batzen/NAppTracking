@@ -5,7 +5,6 @@
     using System.Net;
     using System.Web.Mvc;
     using Microsoft.Ajax.Utilities;
-    using Microsoft.AspNet.Identity;
     using NAppTracking.Server.Configuration;
     using NAppTracking.Server.Entities;
     using NAppTracking.Server.Services;

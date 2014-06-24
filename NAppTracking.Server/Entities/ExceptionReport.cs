@@ -9,6 +9,8 @@
     {
         public ExceptionReport()
         {
+            this.Machine = "UNKNOWN";
+
             if (this.ExceptionReportFiles == null) this.ExceptionReportFiles = new HashSet<ExceptionReportFile>();
             if (this.CustomDataSets == null) this.CustomDataSets = new HashSet<ExceptionReportCustomDataSet>();
         }

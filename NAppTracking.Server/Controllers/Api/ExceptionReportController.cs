@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Web.Http.Description;
@@ -19,31 +20,33 @@
     {
         private readonly EntitiesContext db;
         private readonly IFileSystemService fileSystemService;
-        private readonly IExceptionReportFileStorageService exceptionReportFileStorageService;        
+        private readonly IExceptionReportFileStorageService exceptionReportFileStorageService;
+        private readonly IMailSenderService mailSenderService;
 
-        public ExceptionReportController(EntitiesContext db, IFileSystemService fileSystemService, IExceptionReportFileStorageService exceptionReportFileStorageService)
+        public ExceptionReportController(EntitiesContext db, IFileSystemService fileSystemService, IExceptionReportFileStorageService exceptionReportFileStorageService, IMailSenderService mailSenderService)
         {
             this.db = db;
             this.fileSystemService = fileSystemService;
             this.exceptionReportFileStorageService = exceptionReportFileStorageService;
+            this.mailSenderService = mailSenderService;
         }
 
         // POST api/ExceptionReport
         [HttpPost]
         [ResponseType(typeof(ExceptionReport))]
-        public async Task<IHttpActionResult> PostExceptionReport(ExceptionReportDto exceptionreportDto)
+        public async Task<IHttpActionResult> PostExceptionReport(ExceptionReportDto exceptionReportDto)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.BadRequest(this.ModelState);
             }
             
-            if (exceptionreportDto == null)
+            if (exceptionReportDto == null)
             {
                 return this.BadRequest("No data specified for exception report.");
             }
-           
-            var exceptionreport = Mapper.Map<ExceptionReportDto, ExceptionReport>(exceptionreportDto);
+
+            var exceptionReport = Mapper.Map<ExceptionReportDto, ExceptionReport>(exceptionReportDto);
             var apiKey = ApiKeyHelper.GetApiKey(this.Request);
 
             var application = this.db.TrackingApplications.FirstOrDefault(x => x.ApiKey == apiKey);
@@ -53,12 +56,28 @@
                 return this.BadRequest("No application found for supplied Api-Key.");
             }
             
-            exceptionreport.Application = application;
+            exceptionReport.Application = application;
 
-            this.db.ExceptionReports.Add(exceptionreport);
+            this.db.ExceptionReports.Add(exceptionReport);
             await this.db.SaveChangesAsync();
 
-            return this.CreatedAtRoute("DefaultApi", new { exceptionreport.Id }, exceptionreport);
+            await this.SendExceptionReportMails(exceptionReport);
+
+            return this.CreatedAtRoute("DefaultApi", new { exceptionReport.Id }, exceptionReport);
+        }
+
+        private async Task SendExceptionReportMails(ExceptionReport exceptionReport)
+        {
+            var message = new StringBuilder();
+            message.AppendLine(this.Url.Link("Default", new {controller = "ExceptionReport", action = "Details", id = exceptionReport.Id}));
+            message.AppendLine();
+            message.AppendFormat("Message: {0}", exceptionReport.Message);
+            message.AppendLine();
+            message.AppendLine();
+            message.AppendLine("Details:");
+            message.AppendLine(exceptionReport.Details);
+
+            await this.mailSenderService.SendAsync(exceptionReport.Application.Owners, exceptionReport.Message, message.ToString());
         }
 
         // PUT api/ExceptionReport/5

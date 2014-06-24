@@ -93,6 +93,8 @@ namespace NAppTracking.Server.Helpers
         {
             var demoUser = db.Users.Create();
             demoUser.UserName = "demo";
+            demoUser.Email = "demouser@napptracking.net";
+            demoUser.EmailConfirmed = true;
 
             using (var userManager = DependencyResolver.Current.GetService<ApplicationUserManager>())
             {
