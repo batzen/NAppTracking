@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{46EB6F06
 		Build.ps1 = Build.ps1
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAppTracking.Client.Tests", "NAppTracking.Client.Tests\NAppTracking.Client.Tests.csproj", "{36014D48-1A59-4B2A-B057-AF3557F5A8D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{27CE8985-824E-4BDE-BB8A-6C363AB66BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27CE8985-824E-4BDE-BB8A-6C363AB66BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27CE8985-824E-4BDE-BB8A-6C363AB66BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36014D48-1A59-4B2A-B057-AF3557F5A8D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36014D48-1A59-4B2A-B057-AF3557F5A8D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36014D48-1A59-4B2A-B057-AF3557F5A8D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36014D48-1A59-4B2A-B057-AF3557F5A8D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

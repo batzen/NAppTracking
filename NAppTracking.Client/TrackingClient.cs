@@ -16,9 +16,6 @@
 
         public TrackingClient(Uri baseAddress, Guid apiKey)
         {
-            //this.BaseAddress = new Uri("http://localhost/NAppTracking.Server/");
-            //this.BaseAddress = new Uri("http://localhost.fiddler:1856/");
-
             this.BaseAddress = baseAddress;
             this.ApiKey = apiKey;
 
@@ -29,12 +26,12 @@
 
         public Guid ApiKey { get; private set; }
 
-        public async Task<bool> SendAsync(Exception ex, string comment = null, HashSet<ExceptionReportCustomDataSetDto> customData = null, HashSet<ExceptionReportFileDto> exceptionReportFiles = null)
+        public async Task<TrackingResult> SendAsync(Exception ex, string comment = null, HashSet<ExceptionReportCustomDataSetDto> customData = null, HashSet<ExceptionReportFileDto> exceptionReportFiles = null)
         {
             return await this.SendAsync(new ExceptionReportDto(ex, comment, customData, exceptionReportFiles));
         }
 
-        public async Task<bool> SendAsync(ExceptionReportDto report)
+        public async Task<TrackingResult> SendAsync(ExceptionReportDto report)
         {
             this.EnsureExceptionReportHttpClient();
 
@@ -49,27 +46,27 @@
             try
             {
                 var response = await this.exceptionReportHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+                var result = new TrackingResult(response);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await this.SendExceptionReportFiles(response.Headers.Location, report.ExceptionReportFiles);
+                    return result.Combine(await this.SendExceptionReportFiles(response.Headers.Location, report.ExceptionReportFiles));
                 }
 
-                return response.IsSuccessStatusCode;
+                return result;
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine(e);
-                return false;
+                return new TrackingResult(exception);
             }
         }
 
-        private async Task<bool> SendExceptionReportFiles(Uri reportUri, IEnumerable<ExceptionReportFileDto> reportFiles)
+        public async Task<TrackingResult> SendExceptionReportFiles(Uri reportUri, IEnumerable<ExceptionReportFileDto> reportFiles)
         {
             reportFiles = reportFiles.ToList();
             if (reportFiles.Any() == false)
             {
-                return true;
+                return new TrackingResult();
             }
 
             var request = new HttpRequestMessage(HttpMethod.Put, reportUri);
@@ -86,12 +83,11 @@
             {
                 var response = await this.exceptionReportHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
 
-                return response.IsSuccessStatusCode;
+                return new TrackingResult(response);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine(e);
-                return false;
+                return new TrackingResult(exception);
             }
         }
 

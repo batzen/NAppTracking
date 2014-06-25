@@ -7,8 +7,9 @@
     {
         public static int Main(string[] args)
         {
-            var client = new TrackingClient(new Uri("http://batzen/NAppTracking.Server/"), Guid.Empty);
+            //var client = new TrackingClient(new Uri("http://batzen/NAppTracking.Server/"), Guid.Empty);
             //var client = new TrackingClient(new Uri("http://localhost.fiddler:1856/"), Guid.Empty);
+            var client = new TrackingClient(new Uri("http://localhost:1856/"), Guid.Empty);
             //var client = new TrackingClient(new Uri("http://napptracking.azurewebsites.net/"), Guid.Empty);
 
             try
@@ -42,6 +43,13 @@
                         });
 
                     t.Wait();
+
+                    if (t.Result.Success)
+                    {
+                        Console.WriteLine(t.Result);
+                        Console.ReadLine();
+                        return 1;
+                    }
                 }
             }
             catch (Exception exception)
