@@ -1,4 +1,4 @@
-﻿namespace NAppTracking.Client
+﻿namespace NAppTracking.Dto
 {
     using System;
     using System.Collections.Generic;

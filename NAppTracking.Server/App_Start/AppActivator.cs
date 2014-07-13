@@ -3,7 +3,7 @@
     using System.Security.Claims;
     using System.Web.Helpers;
     using AutoMapper;
-    using NAppTracking.Client;
+    using NAppTracking.Dto;
     using NAppTracking.Server.Configuration;
     using NAppTracking.Server.Entities;
     using NAppTracking.Server.Helpers;

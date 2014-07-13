@@ -9,7 +9,7 @@
     using System.Web.Http;
     using System.Web.Http.Description;
     using AutoMapper;
-    using NAppTracking.Client;
+    using NAppTracking.Dto;
     using NAppTracking.Server.Entities;
     using NAppTracking.Server.Filters;
     using NAppTracking.Server.Helpers;
@@ -46,7 +46,6 @@
                 return this.BadRequest("No data specified for exception report.");
             }
 
-            var exceptionReport = Mapper.Map<ExceptionReportDto, ExceptionReport>(exceptionReportDto);
             var apiKey = ApiKeyHelper.GetApiKey(this.Request);
 
             var application = this.db.TrackingApplications.FirstOrDefault(x => x.ApiKey == apiKey);
@@ -55,7 +54,8 @@
             {
                 return this.BadRequest("No application found for supplied Api-Key.");
             }
-            
+
+            var exceptionReport = Mapper.Map<ExceptionReportDto, ExceptionReport>(exceptionReportDto);
             exceptionReport.Application = application;
 
             this.db.ExceptionReports.Add(exceptionReport);
