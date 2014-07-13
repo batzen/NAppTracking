@@ -44,7 +44,7 @@
 
                     t.Wait();
 
-                    if (t.Result.Success)
+                    if (t.Result.Success == false)
                     {
                         Console.WriteLine(t.Result);
                         Console.ReadLine();
